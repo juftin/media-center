@@ -107,14 +107,14 @@ services:
       - TRANSMISSION_IDLE_SEEDING_LIMIT=0
       - TRANSMISSION_IDLE_SEEDING_LIMIT_ENABLED=True
       - TRANSMISSION_WEB_UI=combustion
-      - TRANSMISSION_DOWNLOAD_DIR=/downloads/completed
+      - TRANSMISSION_DOWNLOAD_DIR=/downloads
       - LOCAL_NETWORK=${LOCAL_NETWORK}
       - TZ=${TZ}
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_DIR}/transmission/config:/data/transmission-home
       - ${DOCKER_DIR}/transmission/watch:/data/watch
-      - ${COMPLETED_DOWNLOADS}:/data/completed
+      - ${COMPLETED_DOWNLOADS}:/downloads
       - ${INCOMPLETE_DOWNLOADS}:/data/incomplete
       - ${DOCKER_DIR}/shared:/shared
     ports:
@@ -210,8 +210,8 @@ services:
     volumes:
       - ${DOCKER_DIR}/plex/config:/config
       - ${TRANSCODE_DIR}:/transcode
-      - ${TV_DIR}:/data/tv
-      - ${MOVIE_DIR}:/data/movies
+      - ${TV_DIR}:/tv
+      - ${MOVIE_DIR}:/movies
       - ${DOCKER_DIR}/shared:/shared
     labels:
       com.ouroboros.enable: "true"
