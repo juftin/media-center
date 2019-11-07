@@ -67,7 +67,7 @@ services:
     labels:
       com.ouroboros.enable:  true
       traefik.enable:        true
-      traefik.frontend.rule: Host:portainer.${DOMAINNAME}, portainer.192.168.0.3
+      traefik.frontend.rule: Host:portainer.${DOMAINNAME}
       traefik.port:          9000
     restart:                 unless-stopped
     networks:
