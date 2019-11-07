@@ -78,25 +78,25 @@ services:
 # ORGANIZR CONFIGURATION
 #############################
 
-  organizr:
-    container_name:          organizr
-    image:                   lsiocommunity/organizr:latest
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${DOCKER_DIR}/organizr/config:/config
-      - ${DOCKER_DIR}/shared:/shared
-    restart:                 unless-stopped
-    networks:
-      bridge:
-        ipv4_address:        172.16.238.12
-    labels:
-      com.ouroboros.enable:  true
-      traefik.enable:        true
-      traefik.frontend.rule: Host:organizr.${DOMAINNAME}
-      traefik.port:          8069
+  # organizr:
+  #   container_name:          organizr
+  #   image:                   lsiocommunity/organizr:latest
+  #   environment:
+  #     - PUID=${PUID}
+  #     - PGID=${PGID}
+  #     - TZ=${TZ}
+  #   volumes:
+  #     - ${DOCKER_DIR}/organizr/config:/config
+  #     - ${DOCKER_DIR}/shared:/shared
+  #   restart:                 unless-stopped
+  #   networks:
+  #     bridge:
+  #       ipv4_address:        172.16.238.12
+  #   labels:
+  #     com.ouroboros.enable:  true
+  #     traefik.enable:        true
+  #     traefik.frontend.rule: Host:organizr.${DOMAINNAME}
+  #     traefik.port:          8069
 
 ###############################################################################
 # DOCKER MAINTENANCE
