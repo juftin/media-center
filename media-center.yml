@@ -55,7 +55,7 @@ services:
 #############################
   portainer:
     container_name:          portainer
-    # hostname:                portainer
+    # hostname:              portainer
     image:                   portainer/portainer:latest
     environment:
       - TZ=${TZ}
@@ -67,7 +67,7 @@ services:
     labels:
       com.ouroboros.enable:  true
       traefik.enable:        true
-      traefik.frontend.rule: Host:portainer.${DOMAINNAME}
+      traefik.frontend.rule: Host:portainer.${DOMAINNAME}, portainer.192.168.0.3
       traefik.port:          9000
     restart:                 unless-stopped
     networks:
@@ -79,8 +79,8 @@ services:
 #############################
 
   # organizr:
-  #   container_name:          organizr
-  #   image:                   lsiocommunity/organizr:latest
+  #   container_name:        organizr
+  #   image:                 lsiocommunity/organizr:latest
   #   environment:
   #     - PUID=${PUID}
   #     - PGID=${PGID}
@@ -88,15 +88,15 @@ services:
   #   volumes:
   #     - ${DOCKER_DIR}/organizr/config:/config
   #     - ${DOCKER_DIR}/shared:/shared
-  #   restart:                 unless-stopped
+  #   restart:               unless-stopped
   #   networks:
   #     bridge:
-  #       ipv4_address:        172.16.238.12
+  #       ipv4_address:      172.16.238.12
   #   labels:
-  #     com.ouroboros.enable:  true
-  #     traefik.enable:        true
+  #     com.ouroboros.enable: true
+  #     traefik.enable:      true
   #     traefik.frontend.rule: Host:organizr.${DOMAINNAME}
-  #     traefik.port:          8069
+  #     traefik.port:        8069
 
 ###############################################################################
 # DOCKER MAINTENANCE
@@ -148,7 +148,7 @@ services:
       - LOCAL_NETWORK=${LOCAL_NETWORK}
       - TZ=${TZ}
     volumes:
-      - /etc/localtime:/etc/localtime:ro
+    #   - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_DIR}/transmission/config:/data/transmission-home
       - ${DOCKER_DIR}/transmission/watch:/data/watch
       - ${COMPLETED_DOWNLOADS}:/downloads
@@ -191,7 +191,7 @@ services:
       - ${DOCKER_DIR}/radarr/config:/config
       - ${COMPLETED_DOWNLOADS}:/downloads
       - ${MOVIE_DIR}:/movies
-      - /etc/localtime:/etc/localtime:ro
+      # - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_DIR}/shared:/shared
     restart:                 unless-stopped
     networks:
@@ -219,7 +219,7 @@ services:
       - ${DOCKER_DIR}/sonarr/config:/config
       - ${COMPLETED_DOWNLOADS}:/downloads
       - ${TV_DIR}:/tv
-      - /etc/localtime:/etc/localtime:ro
+      # - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_DIR}/shared:/shared
     restart:                 unless-stopped
     networks:
@@ -326,7 +326,7 @@ services:
     volumes:
       - ${DOCKER_DIR}/jackett/config:/config
       - ${COMPLETED_DOWNLOADS}:/downloads
-      - "/etc/localtime:/etc/localtime:ro"
+      # - "/etc/localtime:/etc/localtime:ro"
       - ${DOCKER_DIR}/shared:/shared
     restart:                 unless-stopped
     networks:
@@ -358,8 +358,8 @@ services:
       - "SHARE2=juftin;/mount2;yes;no;yes;all;none;;juftin;"
       - TZ=MST7MDT
     volumes:
-      - /media/juftin/NAS:/mount
-      - /home/juftin:/mount2/
+      - ${NAS_MOUNT_1}:/mount
+      - ${NAS_MOUNT_2}:/mount2
     ports:
       - "139:139/tcp"
       - "445:445/tcp"
