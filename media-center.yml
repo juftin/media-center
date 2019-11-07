@@ -96,7 +96,7 @@ services:
       com.ouroboros.enable:  true
       traefik.enable:        true
       traefik.frontend.rule: Host:organizr.${DOMAINNAME}
-      traefik.port:          80
+      traefik.port:          8069
 
 ###############################################################################
 # DOCKER MAINTENANCE
