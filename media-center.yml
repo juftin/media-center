@@ -161,6 +161,30 @@ services:
       traefik.frontend.auth.forward.authResponseHeaders: X-Forwarded-User
       traefik.frontend.auth.forward.trustForwardHeader:  true
 
+#############################
+# ORGANIZR CONFIGURATION
+#############################
+
+  # organizr:
+  #   container_name:                                organizr
+  #   image:                                         lsiocommunity/organizr:latest
+  #   environment:
+  #     - PUID=${PUID}
+  #     - PGID=${PGID}
+  #     - TZ=${TZ}
+  #   volumes:
+  #     - ${DOCKER_DIR}/organizr/config:/config
+  #     - ${DOCKER_DIR}/shared:/shared
+  #   restart:                                       unless-stopped
+  #   networks:
+  #     bridge:
+  #       ipv4_address:                              172.16.238.12
+  #   labels:
+  #     com.ouroboros.enable:                        true
+  #     traefik.enable:                              true
+  #     traefik.frontend.rule:                       Host:organizr.${DOMAINNAME}
+  #     traefik.port:                                8069
+
 #######################################################################################################################################
 # DOCKER MAINTENANCE
 #######################################################################################################################################
@@ -551,6 +575,26 @@ services:
     restart:                                             unless-stopped
     networks:
       - bridge
+
+#############################
+#  NO-IP CONFIGURATION
+#############################
+
+  # no-ip:
+  #   image:                                         coppit/no-ip:latest
+  #   container_name:                                no-ip
+  #   # environment:
+  #   #   - USERNAME=${NO_IP_USER}
+  #   #   - PASSWORD=${NO_IP_PASSWORD}
+  #   #   - DOMAINS=${NO_IP_DOMAIN}
+  #   #   - INTERVAL=5m
+  #   volumes:
+  #     - ${DOCKER_DIR}/no-ip/config:/config
+  #     - /etc/localtime:/etc/localtime:ro
+  #   labels:
+  #     com.ouroboros.enable:                        "true"
+  #   privileged:                                    "true"
+  #   restart:                                       unless-stopped
 
 #######################################################################################################################################
 # NETWORKING CONFIGURATION
