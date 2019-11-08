@@ -281,7 +281,7 @@ services:
       - ${DOCKER_DIR}/shared:/shared
     restart:                                             unless-stopped
     networks:
-      - traefik-traefik
+      - traefik
     labels:
       com.ouroboros.enable:                              true
       traefik.enable:                                    true
@@ -327,7 +327,7 @@ services:
       - ${DOCKER_DIR}/shared:/shared
     restart:                                             unless-stopped
     networks:
-      - traefik-traefik
+      - traefik
     labels:
       com.ouroboros.enable:                              true
       traefik.enable:                                    true
@@ -397,7 +397,7 @@ services:
       - TZ=${TZ}
     restart:                                             unless-stopped
     networks:
-      - traefik-traefik
+      - traefik
     labels:
       com.ouroboros.enable:                              true
       traefik.enable:                                    true
