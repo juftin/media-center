@@ -1,7 +1,5 @@
 ###############################################################################
-#
 # DOCKER COMPOSE - MEDIA-CENTER BY JUFTIN
-#
 ###############################################################################
 
 version:                                                 "3.7"
@@ -31,7 +29,7 @@ services:
     ports:
       - 80:80
       - 443:443
-      # - 8080:8080
+      - 8080:8080
     environment:
       - CF_API_EMAIL=${CLOUDFLARE_EMAIL}
       - CF_API_KEY=${CLOUDFLARE_API_KEY}
@@ -136,6 +134,8 @@ services:
     restart:                                             unless-stopped
     networks:
       - traefik
+    ports:
+      - 9000:9000
     labels:
       com.ouroboros.enable:                              true
       traefik.enable:                                    true
@@ -282,6 +282,8 @@ services:
     restart:                                             unless-stopped
     networks:
       - traefik
+    ports:
+      - 7878:7878
     labels:
       com.ouroboros.enable:                              true
       traefik.enable:                                    true
@@ -326,6 +328,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_DIR}/shared:/shared
     restart:                                             unless-stopped
+    ports:
+      - 8989:8989
     networks:
       - traefik
     labels:
@@ -398,6 +402,8 @@ services:
     restart:                                             unless-stopped
     networks:
       - traefik
+    ports:
+      - 8181:8181
     labels:
       com.ouroboros.enable:                              true
       traefik.enable:                                    true
@@ -440,6 +446,8 @@ services:
     restart:                                             unless-stopped
     networks:
       - traefik
+    ports:
+      - 3579:3579
     labels:
       traefik.enable:                                    true
       traefik.backend:                                   ombi
@@ -488,6 +496,8 @@ services:
     restart:                                             unless-stopped
     networks:
       - traefik
+    ports:
+      - 9117:9117
     labels:
       traefik.enable:                                    true
       traefik.backend:                                   jackett
