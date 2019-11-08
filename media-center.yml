@@ -483,7 +483,7 @@ services:
     volumes:
       - ${DOCKER_DIR}/jackett/config:/config
       - ${COMPLETED_DOWNLOADS}:/downloads
-     - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/localtime:/etc/localtime:ro"
       - ${DOCKER_DIR}/shared:/shared
     restart:                                             unless-stopped
     networks:
