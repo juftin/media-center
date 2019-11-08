@@ -557,6 +557,8 @@ services:
 #######################################################################################################################################
 
 networks:
-  traefik:                                               null
+  traefik:
+    external:
+      name:                                              traefik
   bridge:
     driver:                                              bridge
