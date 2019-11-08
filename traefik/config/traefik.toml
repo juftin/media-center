@@ -1,8 +1,19 @@
-defaultEntryPoints = ["http", "https"]
+logLevel = "ERROR" #DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+InsecureSkipVerify = true
+defaultEntryPoints = ["https", "http"]
 
+# TRAEFIK WEBUI
+[api]
+  entryPoint = "traefik"
+  dashboard = true
+  address = ":8080"
+
+# FORCE HTTPS
 [entryPoints]
   [entryPoints.http]
   address = ":80"
+    [entryPoints.http.redirect]
+    entryPoint = "https"
   [entryPoints.https]
   address = ":443"
     [entryPoints.https.tls]
@@ -11,3 +22,25 @@ defaultEntryPoints = ["http", "https"]
 endpoint = "unix:///var/run/docker.sock"
 domain = "juftin.com"
 exposedByDefault = false
+
+# LETSENCRYPT
+[acme]
+email = "juftin@juftin.com"
+storage="/etc/traefik/acme/acme.json"
+entryPoint = "https"
+acmeLogging=true
+onDemand = false
+[acme.dnsChallenge]
+  provider = "cloudflare"
+  delayBeforeCheck = 300
+[[acme.domains]]
+   main = "juftin.com"
+[[acme.domains]]
+   main = "*.juftin.com"
+
+# CONNECTION TO DOCKER
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+domain = "juftin.com"
+# watch = true
+exposedbydefault = false
