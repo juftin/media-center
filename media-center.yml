@@ -4,7 +4,7 @@
 #
 ###############################################################################
 
-version:                                             "3.7"
+version:                                                 "3.7"
 
 ###############################################################################
 # SERVICES CONFIGURATION
@@ -21,10 +21,10 @@ services:
 #############################
 
   traefik:
-    container_name:                                  traefik
-    hostname:                                        traefik
-    image:                                           traefik:v1.7.16
-    domainname:                                      ${DOMAINNAME}
+    container_name:                                      traefik
+    hostname:                                            traefik
+    image:                                               traefik:v1.7.16
+    domainname:                                          ${DOMAINNAME}
     environment:
       - CF_API_EMAIL=${CLOUDFLARE_EMAIL}
       - CF_API_KEY=${CLOUDFLARE_API_KEY}
@@ -39,26 +39,80 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ${DOCKER_DIR}/traefik/config:/etc/traefik
       - ${DOCKER_DIR}/shared:/shared
-    restart:                                         unless-stopped
+    restart:                                             unless-stopped
     networks:
-      - default
-      - traefik_proxy
+      - bridge
+      - traefik
     labels:
-      traefik.enable:                                true
-      traefik.backend:                               traefik
-      traefik.frontend.rule:                         Host:traefik.${DOMAINNAME
-      traefik.port:                                  8080
-      traefik.docker.network:                        traefik_proxy
-      ttraefik.frontend.headers.SSLRedirect:         true
-      traefik.frontend.headers.STSSeconds:           315360000
-      traefik.frontend.headers.browserXSSFilter:     true
-      traefik.frontend.headers.contentTypeNosniff:   true
-      traefik.frontend.headers.forceSTSHeader:       true
-      traefik.frontend.headers.SSLHost:              juftin.com
-      traefik.frontend.headers.STSIncludeSubdomains: true
-      traefik.frontend.headers.STSPreload:           true
-      traefik.frontend.headers.frameDeny:            true
-      traefik.frontend.auth.basic.users:             ${HTTP_USERNAME}:${HTTP_PASSWORD}
+      com.ouroboros.enable:                              true
+      traefik.enable:                                    true
+      traefik.backend:                                   traefik
+      traefik.protocol:                                  http
+      traefik.port:                                      8080
+      traefik.frontend.rule:                             Host:traefik.${DOMAINNAME}
+      traefik.frontend.headers.SSLHost:                  traefik.${DOMAINNAME}
+      traefik.docker.network:                            traefik
+      traefik.frontend.passHostHeader:                   true
+      traefik.frontend.headers.SSLForceHost:             true
+      traefik.frontend.headers.SSLRedirect:              true
+      traefik.frontend.headers.browserXSSFilter:         true
+      traefik.frontend.headers.contentTypeNosniff:       true
+      traefik.frontend.headers.forceSTSHeader:           true
+      traefik.frontend.headers.STSSeconds:               315360000
+      traefik.frontend.headers.STSIncludeSubdomains:     true
+      traefik.frontend.headers.STSPreload:               true
+      traefik.frontend.headers.customResponseHeaders:    X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
+      traefik.frontend.headers.frameDeny:                true
+      traefik.frontend.headers.customFrameOptionsValue:  'allow-from https:${DOMAINNAME}'
+      traefik.frontend.auth.forward.address:             "http://oauth:4181"
+      traefik.frontend.auth.forward.authResponseHeaders: X-Forwarded-User
+      traefik.frontend.auth.forward.trustForwardHeader:  true
+
+#############################
+# OAUTH CONFIGURATION
+#############################
+
+  oauth:
+    image:                                               thomseddon/traefik-forward-auth:latest
+    container_name:                                      oauth
+    hostname:                                            oauth
+    restart:                                             unless-stopped
+    networks:
+      - bridge
+      - traefik
+    environment:
+      PROVIDERS_GOOGLE_CLIENT_ID:                        ${GOOGLE_CLIENT_ID}
+      PROVIDERS_GOOGLE_CLIENT_SECRET:                    ${GOOGLE_CLIENT_SECRET}
+      SECRET:                                            ${OAUTH_SECRET}
+      COOKIE_DOMAIN:                                     ${DOMAINNAME}
+      INSECURE_COOKIE:                                   "false"
+      AUTH_HOST:                                         oauth.${DOMAINNAME}
+      URL_PATH:                                          /_oauth
+      WHITELIST:                                         ${OAUTH_WHITELIST}
+      LOG_LEVEL:                                         info
+      LIFETIME:                                          2592000 # 30 DAYS
+    labels:
+      com.ouroboros.enable:                              true
+      traefik.enable:                                    true
+      traefik.backend:                                   oauth
+      traefik.port:                                      4181
+      traefik.frontend.rule:                             Host:oauth.${DOMAINNAME}
+      traefik.frontend.headers.SSLHost:                  oauth.${DOMAINNAME}
+      traefik.docker.network:                            traefik
+      traefik.frontend.passHostHeader:                   true
+      traefik.frontend.headers.SSLForceHost:             true
+      traefik.frontend.headers.customResponseHeaders:    X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
+      traefik.frontend.headers.SSLRedirect:              true
+      traefik.frontend.headers.browserXSSFilter:         true
+      traefik.frontend.headers.contentTypeNosniff:       true
+      traefik.frontend.headers.forceSTSHeader:           true
+      traefik.frontend.headers.STSSeconds:               315360000
+      traefik.frontend.headers.STSIncludeSubdomains:     true
+      traefik.frontend.headers.STSPreload:               true
+      traefik.frontend.headers.frameDeny:                true
+      traefik.frontend.auth.forward.address:             "http://oauth:4181"
+      traefik.frontend.auth.forward.authResponseHeaders: X-Forwarded-User
+      traefik.frontend.auth.forward.trustForwardHeader:  true
 
 ###############################################################################
 # FRONTEND SERVICES
@@ -67,50 +121,45 @@ services:
 #############################
 # PORTAINER CONFIGURATION
 #############################
+
   portainer:
-    container_name:                                  portainer
-    # hostname:                                      portainer
-    image:                                           portainer/portainer:latest
+    container_name:                                      portainer
+    # hostname:                                          portainer
+    image:                                               portainer/portainer:latest
     environment:
       - TZ=${TZ}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${DOCKER_DIR}/portainer/config:/data
       - ${DOCKER_DIR}/shared:/shared
-    command:                                         -H unix:///var/run/docker.sock
-    labels:
-      com.ouroboros.enable:                          true
-      traefik.enable:                                true
-      traefik.frontend.rule:                         Host:portainer.${DOMAINNAME}
-      traefik.port:                                  9000
-    restart:                                         unless-stopped
+    command:                                             -H unix:///var/run/docker.sock
+    restart:                                             unless-stopped
     networks:
-      bridge:
-        ipv4_address:                                172.16.238.11
-
-#############################
-# ORGANIZR CONFIGURATION
-#############################
-
-  # organizr:
-  #   container_name:                                organizr
-  #   image:                                         lsiocommunity/organizr:latest
-  #   environment:
-  #     - PUID=${PUID}
-  #     - PGID=${PGID}
-  #     - TZ=${TZ}
-  #   volumes:
-  #     - ${DOCKER_DIR}/organizr/config:/config
-  #     - ${DOCKER_DIR}/shared:/shared
-  #   restart:                                       unless-stopped
-  #   networks:
-  #     bridge:
-  #       ipv4_address:                              172.16.238.12
-  #   labels:
-  #     com.ouroboros.enable:                        true
-  #     traefik.enable:                              true
-  #     traefik.frontend.rule:                       Host:organizr.${DOMAINNAME}
-  #     traefik.port:                                8069
+      - traefik
+    labels:
+      com.ouroboros.enable:                              true
+      traefik.enable:                                    true
+      traefik.backend:                                   portainer
+      traefik.protocol:                                  http
+      traefik.port:                                      9000
+      traefik.frontend.rule:                             Host:portainer.${DOMAINNAME}
+      traefik.frontend.headers.SSLHost:                  portainer.${DOMAINNAME}
+      traefik.docker.network:                            traefik
+      traefik.frontend.passHostHeader:                   true
+      traefik.frontend.headers.SSLForceHost:             true
+      traefik.frontend.headers.SSLRedirect:              true
+      traefik.frontend.headers.browserXSSFilter:         true
+      traefik.frontend.headers.contentTypeNosniff:       true
+      traefik.frontend.headers.forceSTSHeader:           true
+      traefik.frontend.headers.STSSeconds:               315360000
+      traefik.frontend.headers.STSIncludeSubdomains:     true
+      traefik.frontend.headers.STSPreload:               true
+      traefik.frontend.headers.customResponseHeaders:    X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
+      traefik.frontend.headers.frameDeny:                true
+      traefik.frontend.headers.customFrameOptionsValue:  'allow-from https:${DOMAINNAME}'
+      traefik.frontend.auth.forward.address:             "http://oauth:4181"
+      traefik.frontend.auth.forward.authResponseHeaders: X-Forwarded-User
+      traefik.frontend.auth.forward.trustForwardHeader:  true
 
 ###############################################################################
 # DOCKER MAINTENANCE
@@ -120,9 +169,9 @@ services:
 # OUROBOROS CONFIGURATION
 #############################
   ouroboros:
-    container_name:                                  ouroboros
-    hostname:                                        ouroboros
-    image:                                           pyouroboros/ouroboros:latest
+    container_name:                                      ouroboros
+    hostname:                                            ouroboros
+    image:                                               pyouroboros/ouroboros:latest
     environment:
       - INTERVAL=1800
       - CLEANUP=True
@@ -132,10 +181,9 @@ services:
       - TZ=${TZ}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    restart:                                         unless-stopped
+    restart:                                             unless-stopped
     networks:
-      bridge:
-        ipv4_address:                                172.16.238.13
+      - bridge
 
 ###############################################################################
 # DOWNLOAD CLIENTS
@@ -146,9 +194,9 @@ services:
 #############################
 
   transmission:
-    container_name:                                  transmission
-    hostname:                                        transmission
-    image:                                           haugene/transmission-openvpn:latest
+    container_name:                                      transmission
+    hostname:                                            transmission
+    image:                                               haugene/transmission-openvpn:latest
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -160,9 +208,13 @@ services:
       - TRANSMISSION_WEB_UI=combustion
       - TRANSMISSION_DOWNLOAD_DIR=/downloads
       - LOCAL_NETWORK=${LOCAL_NETWORK}
+      # - TRANSMISSION_RPC_AUTHENTICATION_REQUIRED=true
+      # - TRANSMISSION_RPC_HOST_WHITELIST="127.0.0.1,192.168.*.*"
+      # - TRANSMISSION_RPC_USERNAME={DOCKER_USER_NAME}
+      # - TRANSMISSION_RPC_PASSWORD={DOCKER_PASSWORD}
       - TZ=${TZ}
     volumes:
-    #   - /etc/localtime:/etc/localtime:ro
+      - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_DIR}/transmission/config:/data/transmission-home
       - ${DOCKER_DIR}/transmission/watch:/data/watch
       - ${COMPLETED_DOWNLOADS}:/downloads
@@ -175,15 +227,35 @@ services:
       - NET_ADMIN
     devices:
       - /dev/net/tun
-    restart:                                         unless-stopped
+    restart:                                             unless-stopped
     networks:
-      bridge:
-        ipv4_address:                                172.16.238.14
+      - traefik
+    ports:
+       - 9091:9091
     labels:
-      com.ouroboros.enable:                          true
-      traefik.enable:                                true
-      traefik.frontend.rule:                         Host:transmission.${DOMAINNAME}
-      traefik.port:                                  9091
+      com.ouroboros.enable:                              true
+      traefik.enable:                                    true
+      traefik.backend:                                   transmission
+      traefik.protocol:                                  http
+      traefik.port:                                      9091
+      traefik.frontend.rule:                             Host:transmission.${DOMAINNAME}
+      traefik.frontend.headers.SSLHost:                  transmission.${DOMAINNAME}
+      traefik.docker.network:                            traefik
+      traefik.frontend.passHostHeader:                   true
+      traefik.frontend.headers.SSLForceHost:             true
+      traefik.frontend.headers.SSLRedirect:              true
+      traefik.frontend.headers.browserXSSFilter:         true
+      traefik.frontend.headers.contentTypeNosniff:       true
+      traefik.frontend.headers.forceSTSHeader:           true
+      traefik.frontend.headers.STSSeconds:               315360000
+      traefik.frontend.headers.STSIncludeSubdomains:     true
+      traefik.frontend.headers.STSPreload:               true
+      traefik.frontend.headers.customResponseHeaders:    X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
+      traefik.frontend.headers.frameDeny:                true
+      traefik.frontend.headers.customFrameOptionsValue:  'allow-from https:${DOMAINNAME}'
+      traefik.frontend.auth.forward.address:             "http://oauth:4181"
+      traefik.frontend.auth.forward.authResponseHeaders: X-Forwarded-User
+      traefik.frontend.auth.forward.trustForwardHeader:  true
 
 ###############################################################################
 # PERSONAL VIDEO RECORDERS
@@ -194,9 +266,9 @@ services:
 #############################
 
   radarr:
-    image:                                           linuxserver/radarr:latest
-    hostname:                                        radarr
-    container_name:                                  radarr
+    image:                                               linuxserver/radarr:latest
+    hostname:                                            radarr
+    container_name:                                      radarr
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -205,26 +277,44 @@ services:
       - ${DOCKER_DIR}/radarr/config:/config
       - ${COMPLETED_DOWNLOADS}:/downloads
       - ${MOVIE_DIR}:/movies
-      # - /etc/localtime:/etc/localtime:ro
+      - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_DIR}/shared:/shared
-    restart:                                         unless-stopped
+    restart:                                             unless-stopped
     networks:
-      bridge:
-        ipv4_address:                                172.16.238.15
+      - traefik-traefik
     labels:
-      com.ouroboros.enable:                          true
-      traefik.enable:                                true
-      traefik.frontend.rule:                         Host:radarr.${DOMAINNAME}
-      traefik.port:                                  7878
+      com.ouroboros.enable:                              true
+      traefik.enable:                                    true
+      traefik.backend:                                   radarr
+      traefik.protocol:                                  http
+      traefik.port:                                      7878
+      traefik.frontend.rule:                             Host:radarr.${DOMAINNAME}
+      traefik.frontend.headers.SSLHost:                  radarr.${DOMAINNAME}
+      traefik.docker.network:                            traefik
+      traefik.frontend.passHostHeader:                   true
+      traefik.frontend.headers.SSLForceHost:             true
+      traefik.frontend.headers.SSLRedirect:              true
+      traefik.frontend.headers.browserXSSFilter:         true
+      traefik.frontend.headers.contentTypeNosniff:       true
+      traefik.frontend.headers.forceSTSHeader:           true
+      traefik.frontend.headers.STSSeconds:               315360000
+      traefik.frontend.headers.STSIncludeSubdomains:     true
+      traefik.frontend.headers.STSPreload:               true
+      traefik.frontend.headers.customResponseHeaders:    X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
+      traefik.frontend.headers.frameDeny:                true
+      traefik.frontend.headers.customFrameOptionsValue:  'allow-from https:${DOMAINNAME}'
+      traefik.frontend.auth.forward.address:             "http://oauth:4181"
+      traefik.frontend.auth.forward.authResponseHeaders: X-Forwarded-User
+      traefik.frontend.auth.forward.trustForwardHeader:  true
 
 #############################
 # SONARR CONFIGURATION
 #############################
 
   sonarr:
-    image:                                           linuxserver/sonarr:latest
-    hostname:                                        sonarr
-    container_name:                                  sonarr
+    image:                                               linuxserver/sonarr:latest
+    hostname:                                            sonarr
+    container_name:                                      sonarr
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -233,17 +323,35 @@ services:
       - ${DOCKER_DIR}/sonarr/config:/config
       - ${COMPLETED_DOWNLOADS}:/downloads
       - ${TV_DIR}:/tv
-      # - /etc/localtime:/etc/localtime:ro
+      - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_DIR}/shared:/shared
-    restart:                                         unless-stopped
+    restart:                                             unless-stopped
     networks:
-      bridge:
-        ipv4_address:                                172.16.238.16
+      - traefik-traefik
     labels:
-      com.ouroboros.enable:                          true
-      traefik.enable:                                true
-      traefik.frontend.rule:                         Host:sonarr.${DOMAINNAME}
-      traefik.port:                                  8989
+      com.ouroboros.enable:                              true
+      traefik.enable:                                    true
+      traefik.backend:                                   sonarr
+      traefik.protocol:                                  http
+      traefik.port:                                      8989
+      traefik.frontend.rule:                             Host:sonarr.${DOMAINNAME}
+      traefik.frontend.headers.SSLHost:                  sonarr.${DOMAINNAME}
+      traefik.docker.network:                            traefik
+      traefik.frontend.passHostHeader:                   true
+      traefik.frontend.headers.SSLForceHost:             true
+      traefik.frontend.headers.SSLRedirect:              true
+      traefik.frontend.headers.browserXSSFilter:         true
+      traefik.frontend.headers.contentTypeNosniff:       true
+      traefik.frontend.headers.forceSTSHeader:           true
+      traefik.frontend.headers.STSSeconds:               315360000
+      traefik.frontend.headers.STSIncludeSubdomains:     true
+      traefik.frontend.headers.STSPreload:               true
+      traefik.frontend.headers.customResponseHeaders:    X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
+      traefik.frontend.headers.frameDeny:                true
+      traefik.frontend.headers.customFrameOptionsValue:  'allow-from https:${DOMAINNAME}'
+      traefik.frontend.auth.forward.address:             "http://oauth:4181"
+      traefik.frontend.auth.forward.authResponseHeaders: X-Forwarded-User
+      traefik.frontend.auth.forward.trustForwardHeader:  true
 
 ###############################################################################
 # MEDIA SERVER APPS
@@ -254,10 +362,10 @@ services:
 #############################
 
   plex:
-    container_name:                                  plex
-    hostname:                                        plex
-    image:                                           linuxserver/plex:latest
-    network_mode:                                    host
+    container_name:                                      plex
+    hostname:                                            plex
+    image:                                               linuxserver/plex:latest
+    network_mode:                                        host
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -268,17 +376,17 @@ services:
       - ${MOVIE_DIR}:/movies
       - ${DOCKER_DIR}/shared:/shared
     labels:
-      com.ouroboros.enable:                          "true"
-    restart:                                         unless-stopped
+      com.ouroboros.enable:                              "true"
+    restart:                                             unless-stopped
 
 #############################
 # TAUTULLI CONFIGURATION
 #############################
 
   tautulli:
-    container_name:                                  tautulli
-    hostname:                                        tautulli
-    image:                                           linuxserver/tautulli:latest
+    container_name:                                      tautulli
+    hostname:                                            tautulli
+    image:                                               linuxserver/tautulli:latest
     volumes:
       - ${DOCKER_DIR}/tautulli/config:/config
       - ${DOCKER_DIR}/tautulli/logs:/logs:ro
@@ -287,23 +395,41 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
-    restart:                                         unless-stopped
+    restart:                                             unless-stopped
     networks:
-      bridge:
-        ipv4_address:                                172.16.238.17
+      - traefik-traefik
     labels:
-      com.ouroboros.enable:                          true
-      traefik.enable:                                true
-      traefik.frontend.rule:                         Host:tautulli.${DOMAINNAME}
-      traefik.port:                                  8181
+      com.ouroboros.enable:                              true
+      traefik.enable:                                    true
+      traefik.backend:                                   tautulli
+      traefik.protocol:                                  http
+      traefik.port:                                      8181
+      traefik.frontend.rule:                             Host:tautulli.${DOMAINNAME}
+      traefik.frontend.headers.SSLHost:                  tautulli.${DOMAINNAME}
+      traefik.docker.network:                            traefik
+      traefik.frontend.passHostHeader:                   true
+      traefik.frontend.headers.SSLForceHost:             true
+      traefik.frontend.headers.SSLRedirect:              true
+      traefik.frontend.headers.browserXSSFilter:         true
+      traefik.frontend.headers.contentTypeNosniff:       true
+      traefik.frontend.headers.forceSTSHeader:           true
+      traefik.frontend.headers.STSSeconds:               315360000
+      traefik.frontend.headers.STSIncludeSubdomains:     true
+      traefik.frontend.headers.STSPreload:               true
+      traefik.frontend.headers.customResponseHeaders:    X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
+      traefik.frontend.headers.frameDeny:                true
+      traefik.frontend.headers.customFrameOptionsValue:  'allow-from https:${DOMAINNAME}'
+      traefik.frontend.auth.forward.address:             "http://oauth:4181"
+      traefik.frontend.auth.forward.authResponseHeaders: X-Forwarded-User
+      traefik.frontend.auth.forward.trustForwardHeader:  true
 
 #############################
 # OMBI CONFIGURATION
 #############################
 
   ombi:
-    container_name:                                  ombi
-    image:                                           linuxserver/ombi:latest
+    container_name:                                      ombi
+    image:                                               linuxserver/ombi:latest
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -311,15 +437,32 @@ services:
     volumes:
       - ${DOCKER_DIR}/ombi/config:/config
       - ${DOCKER_DIR}/shared:/shared
-    restart:                                         unless-stopped
+    restart:                                             unless-stopped
     networks:
-      bridge:
-        ipv4_address:                                172.16.238.18
+      - traefik
     labels:
-      com.ouroboros.enable:                          true
-      traefik.enable:                                true
-      traefik.frontend.rule:                         Host:ombi.${DOMAINNAME}
-      traefik.port:                                  3579
+      traefik.enable:                                    true
+      traefik.backend:                                   ombi
+      traefik.protocol:                                  http
+      traefik.port:                                      3579
+      traefik.frontend.rule:                             Host:ombi.${DOMAINNAME}
+      traefik.frontend.headers.SSLHost:                  ombi.${DOMAINNAME}
+      traefik.docker.network:                            traefik
+      traefik.frontend.passHostHeader:                   true
+      traefik.frontend.headers.SSLForceHost:             true
+      traefik.frontend.headers.SSLRedirect:              true
+      traefik.frontend.headers.browserXSSFilter:         true
+      traefik.frontend.headers.contentTypeNosniff:       true
+      traefik.frontend.headers.forceSTSHeader:           true
+      traefik.frontend.headers.STSSeconds:               315360000
+      traefik.frontend.headers.STSIncludeSubdomains:     true
+      traefik.frontend.headers.STSPreload:               true
+      traefik.frontend.headers.customResponseHeaders:    X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
+      traefik.frontend.headers.frameDeny:                true
+      traefik.frontend.headers.customFrameOptionsValue:  'allow-from https:${DOMAINNAME}'
+      traefik.frontend.auth.forward.address:             "http://oauth:4181"
+      traefik.frontend.auth.forward.authResponseHeaders: X-Forwarded-User
+      traefik.frontend.auth.forward.trustForwardHeader:  true
 
 ###############################################################################
 # SEARCHER / INDEXER APPS
@@ -330,9 +473,9 @@ services:
 #############################
 
   jackett:
-    container_name:                                  jackett
-    hostname:                                        jackett
-    image:                                           linuxserver/jackett:latest
+    container_name:                                      jackett
+    hostname:                                            jackett
+    image:                                               linuxserver/jackett:latest
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -340,17 +483,34 @@ services:
     volumes:
       - ${DOCKER_DIR}/jackett/config:/config
       - ${COMPLETED_DOWNLOADS}:/downloads
-      # - "/etc/localtime:/etc/localtime:ro"
+     - "/etc/localtime:/etc/localtime:ro"
       - ${DOCKER_DIR}/shared:/shared
-    restart:                                         unless-stopped
+    restart:                                             unless-stopped
     networks:
-      bridge:
-        ipv4_address:                                172.16.238.19
+      - traefik
     labels:
-      com.ouroboros.enable:                          true
-      traefik.enable:                                true
-      traefik.frontend.rule:                         Host:jacket.${DOMAINNAME}
-      traefik.port:                                  9117
+      traefik.enable:                                    true
+      traefik.backend:                                   jackett
+      traefik.protocol:                                  http
+      traefik.port:                                      9117
+      traefik.frontend.rule:                             Host:jackett.${DOMAINNAME}
+      traefik.frontend.headers.SSLHost:                  jackett.${DOMAINNAME}
+      traefik.docker.network:                            traefik
+      traefik.frontend.passHostHeader:                   true
+      traefik.frontend.headers.SSLForceHost:             true
+      traefik.frontend.headers.SSLRedirect:              true
+      traefik.frontend.headers.browserXSSFilter:         true
+      traefik.frontend.headers.contentTypeNosniff:       true
+      traefik.frontend.headers.forceSTSHeader:           true
+      traefik.frontend.headers.STSSeconds:               315360000
+      traefik.frontend.headers.STSIncludeSubdomains:     true
+      traefik.frontend.headers.STSPreload:               true
+      traefik.frontend.headers.customResponseHeaders:    X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
+      traefik.frontend.headers.frameDeny:                true
+      traefik.frontend.headers.customFrameOptionsValue:  'allow-from https:${DOMAINNAME}'
+      traefik.frontend.auth.forward.address:             "http://oauth:4181"
+      traefik.frontend.auth.forward.authResponseHeaders: X-Forwarded-User
+      traefik.frontend.auth.forward.trustForwardHeader:  true
 
 ###############################################################################
 # UTILITIES
@@ -361,9 +521,9 @@ services:
 #############################
 
   samba:
-    container_name:                                  samba
-    hostname:                                        samba
-    image:                                           dperson/samba:latest
+    container_name:                                      samba
+    hostname:                                            samba
+    image:                                               dperson/samba:latest
     environment:
       - USERID=${PUID}
       - GROUPID=${PGID}
@@ -378,39 +538,18 @@ services:
       - "139:139/tcp"
       - "445:445/tcp"
     labels:
-      com.ouroboros.enable:                          "true"
-    restart:                                         unless-stopped
+      com.ouroboros.enable:                              "true"
+    restart:                                             unless-stopped
     networks:
-      bridge:
-        ipv4_address:                                172.16.238.20
-
-#############################
-#  NO-IP CONFIGURATION
-#############################
-
-  # no-ip:
-  #   image:                                         coppit/no-ip:latest
-  #   container_name:                                no-ip
-  #   # environment:
-  #   #   - USERNAME=${NO_IP_USER}
-  #   #   - PASSWORD=${NO_IP_PASSWORD}
-  #   #   - DOMAINS=${NO_IP_DOMAIN}
-  #   #   - INTERVAL=5m
-  #   volumes:
-  #     - ${DOCKER_DIR}/no-ip/config:/config
-  #     - /etc/localtime:/etc/localtime:ro
-  #   labels:
-  #     com.ouroboros.enable:                        "true"
-  #   privileged:                                    "true"
-  #   restart:                                       unless-stopped
+      - bridge
 
 ###############################################################################
 # NETWORKING CONFIGURATION
 ###############################################################################
 
 networks:
-  traefik_proxy:
+  traefik:
     external:
-      name:                                          traefik_proxy
-  default:
-    driver:                                          bridge
+      name:                                              traefik
+  bridge:
+    driver:                                              bridge
