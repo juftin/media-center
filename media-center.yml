@@ -42,7 +42,7 @@ services:
       traefik:
         ipv4_address:       192.168.101.2
       bridge:
-        ipv4_address:       172.69.420.2
+        ipv4_address:       192.168.202.2
     labels:
       com.ouroboros.enable:                              true
       traefik.enable:                                    true
@@ -81,7 +81,7 @@ services:
       traefik:
         ipv4_address:       192.168.101.3
       bridge:
-        ipv4_address:       172.69.420.3
+        ipv4_address:       192.168.202.3
     environment:
       PROVIDERS_GOOGLE_CLIENT_ID:                        ${GOOGLE_CLIENT_ID}
       PROVIDERS_GOOGLE_CLIENT_SECRET:                    ${GOOGLE_CLIENT_SECRET}
@@ -213,7 +213,7 @@ services:
     restart:                                             unless-stopped
     networks:
       bridge:
-        ipv4_address:       172.69.420.4
+        ipv4_address:       192.168.202.4
 
 #######################################################################################################################################
 # DOWNLOAD CLIENTS
@@ -587,7 +587,7 @@ services:
     restart:                                             unless-stopped
     networks:
       bridge:
-        ipv4_address:       172.69.420.5
+        ipv4_address:       192.168.202.5
 
 #############################
 #  NO-IP CONFIGURATION
@@ -625,4 +625,4 @@ networks:
     ipam:
       driver:               default
       config:
-      - subnet:             172.69.420.0/20
+      - subnet:             192.168.202.0/20
