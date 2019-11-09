@@ -367,7 +367,7 @@ services:
 
   sonarr:
     image:                                               linuxserver/sonarr:latest
-    hostname:                                            sonarr
+    hostname:                                            tv
     container_name:                                      sonarr
     environment:
       PUID:                                              ${PUID}
@@ -386,13 +386,12 @@ services:
       traefik:
         ipv4_address:                                    192.168.101.8
     labels:
-      com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
       traefik.backend:                                   sonarr
       traefik.protocol:                                  http
       traefik.port:                                      8989
-      traefik.frontend.rule:                             Host:sonarr.${DOMAINNAME}
-      traefik.frontend.headers.SSLHost:                  sonarr.${DOMAINNAME}
+      traefik.frontend.rule:                             Host:tv.${DOMAINNAME}
+      traefik.frontend.headers.SSLHost:                  tv.${DOMAINNAME}
       traefik.docker.network:                            traefik
       traefik.frontend.passHostHeader:                   true
       traefik.frontend.headers.SSLForceHost:             true
@@ -409,6 +408,7 @@ services:
       traefik.frontend.auth.forward.address:             "http://oauth:4181,http://organizr/api/?v1/auth&group=1"
       traefik.frontend.auth.forward.authResponseHeaders: X-Forwarded-User
       traefik.frontend.auth.forward.trustForwardHeader:  true
+      com.ouroboros.enable:                              "true"
 
 #######################################################################################################################################
 # MEDIA SERVER APPS
