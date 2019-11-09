@@ -172,7 +172,7 @@ services:
 
   organizr:
     container_name:                                      organizr
-    image:                                               lsiocommunity/organizr:latest
+    image:                                               linuxserver/organizr
     environment:
       PUID:                                              ${PUID}
       PGID:                                              ${PGID}
