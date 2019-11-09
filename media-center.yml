@@ -601,6 +601,7 @@ services:
       - ${DOCKER_DIR}/nextcloud:/config
       - ${NAS_MOUNT_1}:/data
       - ${DOCKER_DIR}/shared:/shared
+      - ${DOCKER_DIR}/shared/keys:/config/keys
     ports:
       - 7005:443
     environment:
