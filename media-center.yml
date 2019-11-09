@@ -406,7 +406,7 @@ services:
       traefik.frontend.headers.customResponseHeaders:    X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
       traefik.frontend.headers.frameDeny:                false
       traefik.frontend.headers.customFrameOptionsValue:  'allow-from https:${DOMAINNAME}'
-      traefik.frontend.auth.forward.address:             "http://oauth:4181"
+      traefik.frontend.auth.forward.address:             "http://oauth:4181,http://organizr/api/?v1/auth&group=1"
       traefik.frontend.auth.forward.authResponseHeaders: X-Forwarded-User
       traefik.frontend.auth.forward.trustForwardHeader:  true
 
