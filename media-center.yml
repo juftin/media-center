@@ -24,15 +24,15 @@ services:
     image:                                               traefik:v1.7.16
     domainname:                                          ${DOMAINNAME}
     environment:
-      - CF_API_EMAIL=${CLOUDFLARE_EMAIL}
-      - CF_API_KEY=${CLOUDFLARE_API_KEY}
+      CF_API_EMAIL:                                      ${CLOUDFLARE_EMAIL}
+      CF_API_KEY:                                        ${CLOUDFLARE_API_KEY}
     ports:
       - 80:80
       - 443:443
       - 8080:8080
     environment:
-      - CF_API_EMAIL=${CLOUDFLARE_EMAIL}
-      - CF_API_KEY=${CLOUDFLARE_API_KEY}
+      CF_API_EMAIL:                                      ${CLOUDFLARE_EMAIL}
+      CF_API_KEY:                                        ${CLOUDFLARE_API_KEY}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ${DOCKER_DIR}/traefik/config:/etc/traefik
@@ -44,7 +44,7 @@ services:
       bridge:
         ipv4_address:                                    192.168.202.2
     labels:
-      com.ouroboros.enable:                              true
+      com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
       traefik.backend:                                   traefik
       traefik.protocol:                                  http
@@ -94,7 +94,7 @@ services:
       LOG_LEVEL:                                         info
       LIFETIME:                                          2592000 # 30 DAYS
     labels:
-      com.ouroboros.enable:                              true
+      com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
       traefik.backend:                                   oauth
       traefik.port:                                      4181
@@ -129,7 +129,7 @@ services:
     # hostname:                                          portainer
     image:                                               portainer/portainer:latest
     environment:
-      - TZ=${TZ}
+      TZ:                                                ${TZ}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${DOCKER_DIR}/portainer/config:/data
@@ -142,7 +142,7 @@ services:
     ports:
       - 9000:9000
     labels:
-      com.ouroboros.enable:                              true
+      com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
       traefik.backend:                                   portainer
       traefik.protocol:                                  http
@@ -166,29 +166,40 @@ services:
       traefik.frontend.auth.forward.authResponseHeaders: X-Forwarded-User
       traefik.frontend.auth.forward.trustForwardHeader:  true
 
-#############################
+############################
 # ORGANIZR CONFIGURATION
-#############################
+############################
 
-  # organizr:
-  #   container_name:                                    organizr
-  #   image:                                             lsiocommunity/organizr:latest
-  #   environment:
-  #     - PUID=${PUID}
-  #     - PGID=${PGID}
-  #     - TZ=${TZ}
-  #   volumes:
-  #     - ${DOCKER_DIR}/organizr/config:/config
-  #     - ${DOCKER_DIR}/shared:/shared
-  #   restart:                                           unless-stopped
-  #   networks:
-  #     bridge:
-  #       ipv4_address:                                  172.16.238.12
-  #   labels:
-  #     com.ouroboros.enable:                            true
-  #     traefik.enable:                                  true
-  #     traefik.frontend.rule:                           Host:organizr.${DOMAINNAME}
-  #     traefik.port:                                    8069
+  organizr:
+    container_name:                                      organizr
+    image:                                               lsiocommunity/organizr:latest
+    environment:
+      PUID:                                              ${PUID}
+      PGID:                                              ${PGID}
+      TZ:                                                ${TZ}
+    volumes:
+      - ${DOCKER_DIR}/organizr/config:/config
+      - ${DOCKER_DIR}/shared:/shared
+    restart:                                             unless-stopped
+    networks:
+      traefik:
+        ipv4_address:                                    192.168.101.5
+    labels:
+      com.ouroboros.enable:                              "true"
+      traefik.enable:                                    true"
+      traefik.backend:                                   organizr
+      traefik.frontend.rule:                             Host:organizr.${DOMAINNAME}"
+      traefik.port:                                      80
+      traefik.docker.network:                            traefik
+      traefik.frontend.headers.SSLRedirect:              true
+      traefik.frontend.headers.STSSeconds:               315360000
+      traefik.frontend.headers.browserXSSFilter:         true
+      traefik.frontend.headers.contentTypeNosniff:       true
+      traefik.frontend.headers.forceSTSHeader:           true
+      traefik.frontend.headers.SSLHost:                  example.com
+      traefik.frontend.headers.STSIncludeSubdomains:     true
+      traefik.frontend.headers.STSPreload:               true
+      traefik.frontend.headers.frameDeny:                true
 
 #######################################################################################################################################
 # DOCKER MAINTENANCE
@@ -202,12 +213,12 @@ services:
     hostname:                                            ouroboros
     image:                                               pyouroboros/ouroboros:latest
     environment:
-      - INTERVAL=1800
-      - CLEANUP=True
-      - LABEL_ENABLE=TRUE
-      - LABELS_ONLY=True
-      - SELF_UPDATE=True
-      - TZ=${TZ}
+      INTERVAL:                                          1800
+      CLEANUP:                                           "true"
+      LABEL_ENABLE:                                      "true"
+      LABELS_ONLY:                                       "true"
+      SELF_UPDATE:                                       "true"
+      TZ:                                                ${TZ}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart:                                             unless-stopped
@@ -228,20 +239,20 @@ services:
     hostname:                                            transmission
     image:                                               haugene/transmission-openvpn:latest
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - OPENVPN_PROVIDER=${OPENVPN_PROVIDER}
-      - OPENVPN_USERNAME=${OPENVPN_USERNAME}
-      - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
-      - TRANSMISSION_IDLE_SEEDING_LIMIT=0
-      - TRANSMISSION_IDLE_SEEDING_LIMIT_ENABLED=True
-      - TRANSMISSION_WEB_UI=combustion
-      - TRANSMISSION_DOWNLOAD_DIR=/downloads
-      - LOCAL_NETWORK=${LOCAL_NETWORK}
-      # - TRANSMISSION_RPC_AUTHENTICATION_REQUIRED=true
-      # - TRANSMISSION_RPC_USERNAME=${DOCKER_USER_NAME}
-      # - TRANSMISSION_RPC_PASSWORD=${DOCKER_PASSWORD}
-      - TZ=${TZ}
+      PUID:                                              ${PUID}
+      PGID:                                              ${PGID}
+      OPENVPN_PROVIDER:                                  ${OPENVPN_PROVIDER}
+      OPENVPN_USERNAME:                                  ${OPENVPN_USERNAME}
+      OPENVPN_PASSWORD:                                  ${OPENVPN_PASSWORD}
+      TRANSMISSION_IDLE_SEEDING_LIMIT:                   0
+      TRANSMISSION_IDLE_SEEDING_LIMIT_ENABLED:           "true"
+      TRANSMISSION_WEB_UI:                               combustion
+      TRANSMISSION_DOWNLOAD_DIR:                         /downloads
+      LOCAL_NETWORK:                                     ${LOCAL_NETWORK}
+      # TRANSMISSION_RPC_AUTHENTICATION_REQUIRED:        true
+      # TRANSMISSION_RPC_USERNAME:                       ${DOCKER_USER_NAME}
+      # TRANSMISSION_RPC_PASSWORD:                       ${DOCKER_PASSWORD}
+      TZ:                                                ${TZ}
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_DIR}/transmission/config:/data/transmission-home
@@ -259,11 +270,11 @@ services:
     restart:                                             unless-stopped
     networks:
       traefik:
-        ipv4_address:                                    192.168.101.5
+        ipv4_address:                                    192.168.101.6
     ports:
        - 9091:9091
     labels:
-      com.ouroboros.enable:                              true
+      com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
       traefik.backend:                                   transmission
       traefik.protocol:                                  http
@@ -300,9 +311,9 @@ services:
     hostname:                                            radarr
     container_name:                                      radarr
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
+      PUID:                                              ${PUID}
+      PGID:                                              ${PGID}
+      TZ:                                                ${TZ}
     volumes:
       - ${DOCKER_DIR}/radarr/config:/config
       - ${COMPLETED_DOWNLOADS}:/downloads
@@ -312,11 +323,11 @@ services:
     restart:                                             unless-stopped
     networks:
       traefik:
-        ipv4_address:                                    192.168.101.6
+        ipv4_address:                                    192.168.101.7
     ports:
       - 7878:7878
     labels:
-      com.ouroboros.enable:                              true
+      com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
       traefik.backend:                                   radarr
       traefik.protocol:                                  http
@@ -349,9 +360,9 @@ services:
     hostname:                                            sonarr
     container_name:                                      sonarr
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
+      PUID:                                              ${PUID}
+      PGID:                                              ${PGID}
+      TZ:                                                ${TZ}
     volumes:
       - ${DOCKER_DIR}/sonarr/config:/config
       - ${COMPLETED_DOWNLOADS}:/downloads
@@ -363,9 +374,9 @@ services:
       - 8989:8989
     networks:
       traefik:
-        ipv4_address:                                    192.168.101.7
+        ipv4_address:                                    192.168.101.8
     labels:
-      com.ouroboros.enable:                              true
+      com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
       traefik.backend:                                   sonarr
       traefik.protocol:                                  http
@@ -403,8 +414,8 @@ services:
     image:                                               linuxserver/plex:latest
     network_mode:                                        host
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
+      PUID:                                              ${PUID}
+      PGID:                                              ${PGID}
     volumes:
       - ${DOCKER_DIR}/plex/config:/config
       - ${TRANSCODE_DIR}:/transcode
@@ -428,17 +439,17 @@ services:
       - ${DOCKER_DIR}/tautulli/logs:/logs:ro
       - ${DOCKER_DIR}/shared:/shared
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
+      PUID:                                              ${PUID}
+      PGID:                                              ${PGID}
+      TZ:                                                ${TZ}
     restart:                                             unless-stopped
     networks:
       traefik:
-        ipv4_address:                                    192.168.101.8
+        ipv4_address:                                    192.168.101.9
     ports:
       - 8181:8181
     labels:
-      com.ouroboros.enable:                              true
+      com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
       traefik.backend:                                   tautulli
       traefik.protocol:                                  http
@@ -470,19 +481,20 @@ services:
     container_name:                                      ombi
     image:                                               linuxserver/ombi:latest
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
+      PUID:                                              ${PUID}
+      PGID:                                              ${PGID}
+      TZ:                                                ${TZ}
     volumes:
       - ${DOCKER_DIR}/ombi/config:/config
       - ${DOCKER_DIR}/shared:/shared
     restart:                                             unless-stopped
     networks:
       traefik:
-        ipv4_address:                                    192.168.101.9
+        ipv4_address:                                    192.168.101.10
     ports:
       - 3579:3579
     labels:
+      com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
       traefik.backend:                                   ombi
       traefik.protocol:                                  http
@@ -519,9 +531,9 @@ services:
     hostname:                                            jackett
     image:                                               linuxserver/jackett:latest
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
+      PUID:                                              ${PUID}
+      PGID:                                              ${PGID}
+      TZ:                                                ${TZ}
     volumes:
       - ${DOCKER_DIR}/jackett/config:/config
       - ${COMPLETED_DOWNLOADS}:/downloads
@@ -530,10 +542,12 @@ services:
     restart:                                             unless-stopped
     networks:
       traefik:
-        ipv4_address:                                    192.168.101.10
+        ipv4_address:                                    192.168.101.11
     ports:
-      - 9117:9117
+    - published:                                         9117
+      target:                                            9117
     labels:
+      com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
       traefik.backend:                                   jackett
       traefik.protocol:                                  http
@@ -570,12 +584,12 @@ services:
     hostname:                                            samba
     image:                                               dperson/samba:latest
     environment:
-      - USERID=${PUID}
-      - GROUPID=${PGID}
-      - WORKGROUP=workgroup
-      - "SHARE=NAS;/mount;yes;no;yes;all;none;;NAS;"
-      - "SHARE2=juftin;/mount2;yes;no;yes;all;none;;juftin;"
-      - TZ=MST7MDT
+      USERID:                                            ${PUID}
+      GROUPID:                                           ${PGID}
+      WORKGROUP:                                         workgroup
+      SHARE:                                             "NAS;/mount;yes;no;yes;all;none;;NAS;"
+      SHARE2:                                            "juftin;/mount2;yes;no;yes;all;none;;juftin;"
+      TZ:                                                MST7MDT
     volumes:
       - ${NAS_MOUNT_1}:/mount
       - ${NAS_MOUNT_2}:/mount2
@@ -595,7 +609,6 @@ services:
 
   # nextcloud:
   #   container_name:                                      nextcloud
-  #
   #   image:                                               linuxserver/nextcloud:latest
   #   volumes:
   #     - ${DOCKER_DIR}/nextcloud:/config
@@ -605,13 +618,14 @@ services:
   #   ports:
   #     - 7005:443
   #   environment:
-  #     - PUID=${PUID}
-  #     - PGID=${PGID}
+  #     PUID:                                              ${PUID}
+  #     PGID:                                              ${PGID}
   #   networks:
   #     traefik:
   #       ipv4_address:                                    192.168.101.11
   #   restart:                                             unless-stopped
   #   labels:
+  #     com.ouroboros.enable:                              "true"
   #     traefik.enable:                                    true
   #     traefik.backend:                                   nextcloud
   #     traefik.protocol:                                  http
@@ -642,11 +656,11 @@ services:
   # no-ip:
   #   image:                                             coppit/no-ip:latest
   #   container_name:                                    no-ip
-  #   # environment:
-  #   #   - USERNAME=${NO_IP_USER}
-  #   #   - PASSWORD=${NO_IP_PASSWORD}
-  #   #   - DOMAINS=${NO_IP_DOMAIN}
-  #   #   - INTERVAL=5m
+  #   environment:
+  #     USERNAME:                                        ${NO_IP_USER}
+  #     PASSWORD:                                        ${NO_IP_PASSWORD}
+  #     DOMAINS:                                         ${NO_IP_DOMAIN}
+  #     INTERVAL:                                        5m
   #   volumes:
   #     - ${DOCKER_DIR}/no-ip/config:/config
   #     - /etc/localtime:/etc/localtime:ro
@@ -663,12 +677,12 @@ networks:
   traefik:
     driver:                                              bridge
     ipam:
-      driver:                                            default
       config:
       - subnet:                                          192.168.101.0/20
+      driver:                                            default
   bridge:
     driver:                                              bridge
     ipam:
-      driver:                                            default
       config:
       - subnet:                                          192.168.202.0/20
+      driver:                                            default
