@@ -32,6 +32,8 @@ onDemand = false
    main = "juftin.com"
 [[acme.domains]]
    main = "*.juftin.com"
+   [[acme.domains]]
+      main = "sonarr.juftin.com"
 
 # CONNECTION TO DOCKER
 [docker]
