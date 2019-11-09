@@ -40,9 +40,9 @@ services:
     restart:                                             unless-stopped
     networks:
       traefik:
-        ipv4_address:       192.168.101.2
+        ipv4_address:                                    192.168.101.2
       bridge:
-        ipv4_address:       192.168.202.2
+        ipv4_address:                                    192.168.202.2
     labels:
       com.ouroboros.enable:                              true
       traefik.enable:                                    true
@@ -79,9 +79,9 @@ services:
     restart:                                             unless-stopped
     networks:
       traefik:
-        ipv4_address:       192.168.101.3
+        ipv4_address:                                    192.168.101.3
       bridge:
-        ipv4_address:       192.168.202.3
+        ipv4_address:                                    192.168.202.3
     environment:
       PROVIDERS_GOOGLE_CLIENT_ID:                        ${GOOGLE_CLIENT_ID}
       PROVIDERS_GOOGLE_CLIENT_SECRET:                    ${GOOGLE_CLIENT_SECRET}
@@ -138,7 +138,7 @@ services:
     restart:                                             unless-stopped
     networks:
       traefik:
-        ipv4_address:       192.168.101.4
+        ipv4_address:                                    192.168.101.4
     ports:
       - 9000:9000
     labels:
@@ -171,8 +171,8 @@ services:
 #############################
 
   # organizr:
-  #   container_name:                                organizr
-  #   image:                                         lsiocommunity/organizr:latest
+  #   container_name:                                    organizr
+  #   image:                                             lsiocommunity/organizr:latest
   #   environment:
   #     - PUID=${PUID}
   #     - PGID=${PGID}
@@ -180,15 +180,15 @@ services:
   #   volumes:
   #     - ${DOCKER_DIR}/organizr/config:/config
   #     - ${DOCKER_DIR}/shared:/shared
-  #   restart:                                       unless-stopped
+  #   restart:                                           unless-stopped
   #   networks:
   #     bridge:
-  #       ipv4_address:                              172.16.238.12
+  #       ipv4_address:                                  172.16.238.12
   #   labels:
-  #     com.ouroboros.enable:                        true
-  #     traefik.enable:                              true
-  #     traefik.frontend.rule:                       Host:organizr.${DOMAINNAME}
-  #     traefik.port:                                8069
+  #     com.ouroboros.enable:                            true
+  #     traefik.enable:                                  true
+  #     traefik.frontend.rule:                           Host:organizr.${DOMAINNAME}
+  #     traefik.port:                                    8069
 
 #######################################################################################################################################
 # DOCKER MAINTENANCE
@@ -213,7 +213,7 @@ services:
     restart:                                             unless-stopped
     networks:
       bridge:
-        ipv4_address:       192.168.202.4
+        ipv4_address:                                    192.168.202.4
 
 #######################################################################################################################################
 # DOWNLOAD CLIENTS
@@ -259,7 +259,7 @@ services:
     restart:                                             unless-stopped
     networks:
       traefik:
-        ipv4_address:       192.168.101.5
+        ipv4_address:                                    192.168.101.5
     ports:
        - 9091:9091
     labels:
@@ -312,7 +312,7 @@ services:
     restart:                                             unless-stopped
     networks:
       traefik:
-        ipv4_address:       192.168.101.6
+        ipv4_address:                                    192.168.101.6
     ports:
       - 7878:7878
     labels:
@@ -363,7 +363,7 @@ services:
       - 8989:8989
     networks:
       traefik:
-        ipv4_address:       192.168.101.7
+        ipv4_address:                                    192.168.101.7
     labels:
       com.ouroboros.enable:                              true
       traefik.enable:                                    true
@@ -434,7 +434,7 @@ services:
     restart:                                             unless-stopped
     networks:
       traefik:
-        ipv4_address:       192.168.101.8
+        ipv4_address:                                    192.168.101.8
     ports:
       - 8181:8181
     labels:
@@ -479,7 +479,7 @@ services:
     restart:                                             unless-stopped
     networks:
       traefik:
-        ipv4_address:       192.168.101.9
+        ipv4_address:                                    192.168.101.9
     ports:
       - 3579:3579
     labels:
@@ -530,7 +530,7 @@ services:
     restart:                                             unless-stopped
     networks:
       traefik:
-        ipv4_address:       192.168.101.10
+        ipv4_address:                                    192.168.101.10
     ports:
       - 9117:9117
     labels:
@@ -587,15 +587,60 @@ services:
     restart:                                             unless-stopped
     networks:
       bridge:
-        ipv4_address:       192.168.202.5
+        ipv4_address:                                    192.168.202.5
+
+#############################
+#  NEXTCLOUD CONFIGURATION
+#############################
+
+  nextcloud:
+    container_name:                                      nextcloud
+
+    image:                                               linuxserver/nextcloud:latest
+    volumes:
+      - ${DOCKER_DIR}/nextcloud:/config
+      - ${NAS_MOUNT_1}:/data
+      - ${DOCKER_DIR}/shared:/shared
+    ports:
+      - 7005:443
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+    networks:
+      traefik:
+        ipv4_address:                                    192.168.101.11
+    restart:                                             unless-stopped
+    labels:
+      traefik.enable:                                    true
+      traefik.backend:                                   nextcloud
+      traefik.protocol:                                  http
+      traefik.port:                                      443
+      traefik.frontend.rule:                             Host:nextcloud.${DOMAINNAME}
+      traefik.frontend.headers.SSLHost:                  nextcloud.${DOMAINNAME}
+      traefik.docker.network:                            traefik
+      traefik.frontend.passHostHeader:                   true
+      traefik.frontend.headers.SSLForceHost:             true
+      traefik.frontend.headers.SSLRedirect:              true
+      traefik.frontend.headers.browserXSSFilter:         true
+      traefik.frontend.headers.contentTypeNosniff:       true
+      traefik.frontend.headers.forceSTSHeader:           true
+      traefik.frontend.headers.STSSeconds:               315360000
+      traefik.frontend.headers.STSIncludeSubdomains:     true
+      traefik.frontend.headers.STSPreload:               true
+      traefik.frontend.headers.customResponseHeaders:    X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
+      traefik.frontend.headers.frameDeny:                true
+      traefik.frontend.headers.customFrameOptionsValue:  'allow-from https:${DOMAINNAME}'
+      traefik.frontend.auth.forward.address:             "http://oauth:4181"
+      traefik.frontend.auth.forward.authResponseHeaders: X-Forwarded-User
+      traefik.frontend.auth.forward.trustForwardHeader:  true
 
 #############################
 #  NO-IP CONFIGURATION
 #############################
 
   # no-ip:
-  #   image:                                         coppit/no-ip:latest
-  #   container_name:                                no-ip
+  #   image:                                             coppit/no-ip:latest
+  #   container_name:                                    no-ip
   #   # environment:
   #   #   - USERNAME=${NO_IP_USER}
   #   #   - PASSWORD=${NO_IP_PASSWORD}
@@ -605,9 +650,9 @@ services:
   #     - ${DOCKER_DIR}/no-ip/config:/config
   #     - /etc/localtime:/etc/localtime:ro
   #   labels:
-  #     com.ouroboros.enable:                        "true"
-  #   privileged:                                    "true"
-  #   restart:                                       unless-stopped
+  #     com.ouroboros.enable:                            "true"
+  #   privileged:                                        "true"
+  #   restart:                                           unless-stopped
 
 #######################################################################################################################################
 # NETWORKING CONFIGURATION
@@ -615,14 +660,14 @@ services:
 
 networks:
   traefik:
-    driver:                 bridge
+    driver:                                              bridge
     ipam:
-      driver:               default
+      driver:                                            default
       config:
-      - subnet:             192.168.101.0/20
+      - subnet:                                          192.168.101.0/20
   bridge:
-    driver:                 bridge
+    driver:                                              bridge
     ipam:
-      driver:               default
+      driver:                                            default
       config:
-      - subnet:             192.168.202.0/20
+      - subnet:                                          192.168.202.0/20
