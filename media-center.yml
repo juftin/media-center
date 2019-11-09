@@ -688,11 +688,11 @@ networks:
     driver:                                              bridge
     ipam:
       config:
-      - subnet:                                          192.168.101.0/20
+      - subnet:                                          192.168.101.0/24
       driver:                                            default
   bridge:
     driver:                                              bridge
     ipam:
       config:
-      - subnet:                                          192.168.202.0/20
+      - subnet:                                          192.168.202.0/24
       driver:                                            default
