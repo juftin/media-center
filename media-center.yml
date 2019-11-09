@@ -39,8 +39,10 @@ services:
       - ${DOCKER_DIR}/shared:/shared
     restart:                                             unless-stopped
     networks:
-      - bridge
-      - traefik
+      traefik:
+        ipv4_address:       192.168.101.2
+      bridge:
+        ipv4_address:       172.69.420.2
     labels:
       com.ouroboros.enable:                              true
       traefik.enable:                                    true
@@ -76,8 +78,10 @@ services:
     hostname:                                            oauth
     restart:                                             unless-stopped
     networks:
-      - bridge
-      - traefik
+      traefik:
+        ipv4_address:       192.168.101.3
+      bridge:
+        ipv4_address:       172.69.420.3
     environment:
       PROVIDERS_GOOGLE_CLIENT_ID:                        ${GOOGLE_CLIENT_ID}
       PROVIDERS_GOOGLE_CLIENT_SECRET:                    ${GOOGLE_CLIENT_SECRET}
@@ -133,7 +137,8 @@ services:
     command:                                             -H unix:///var/run/docker.sock
     restart:                                             unless-stopped
     networks:
-      - traefik
+      traefik:
+        ipv4_address:       192.168.101.4
     ports:
       - 9000:9000
     labels:
@@ -207,7 +212,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     restart:                                             unless-stopped
     networks:
-      - bridge
+      bridge:
+        ipv4_address:       172.69.420.4
 
 #######################################################################################################################################
 # DOWNLOAD CLIENTS
@@ -252,7 +258,8 @@ services:
       - /dev/net/tun
     restart:                                             unless-stopped
     networks:
-      - traefik
+      traefik:
+        ipv4_address:       192.168.101.5
     ports:
        - 9091:9091
     labels:
@@ -304,7 +311,8 @@ services:
       - ${DOCKER_DIR}/shared:/shared
     restart:                                             unless-stopped
     networks:
-      - traefik
+      traefik:
+        ipv4_address:       192.168.101.6
     ports:
       - 7878:7878
     labels:
@@ -354,7 +362,8 @@ services:
     ports:
       - 8989:8989
     networks:
-      - traefik
+      traefik:
+        ipv4_address:       192.168.101.7
     labels:
       com.ouroboros.enable:                              true
       traefik.enable:                                    true
@@ -424,7 +433,8 @@ services:
       - TZ=${TZ}
     restart:                                             unless-stopped
     networks:
-      - traefik
+      traefik:
+        ipv4_address:       192.168.101.8
     ports:
       - 8181:8181
     labels:
@@ -468,7 +478,8 @@ services:
       - ${DOCKER_DIR}/shared:/shared
     restart:                                             unless-stopped
     networks:
-      - traefik
+      traefik:
+        ipv4_address:       192.168.101.9
     ports:
       - 3579:3579
     labels:
@@ -518,7 +529,8 @@ services:
       - ${DOCKER_DIR}/shared:/shared
     restart:                                             unless-stopped
     networks:
-      - traefik
+      traefik:
+        ipv4_address:       192.168.101.10
     ports:
       - 9117:9117
     labels:
@@ -574,7 +586,8 @@ services:
       com.ouroboros.enable:                              "true"
     restart:                                             unless-stopped
     networks:
-      - bridge
+      bridge:
+        ipv4_address:       172.69.420.5
 
 #############################
 #  NO-IP CONFIGURATION
@@ -602,7 +615,14 @@ services:
 
 networks:
   traefik:
-    external:
-      name:                                              traefik
+    driver:                 bridge
+    ipam:
+      driver:               default
+      config:
+      - subnet:             192.168.101.0/20
   bridge:
-    driver:                                              bridge
+    driver:                 bridge
+    ipam:
+      driver:               default
+      config:
+      - subnet:             172.69.420.0/20
