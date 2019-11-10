@@ -231,12 +231,12 @@ services:
         ipv4_address:                                    192.168.101.5
     ports:
       - 80:80
-      - 443:443
+      - 442:443
     labels:
       com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
       traefik.backend:                                   heimdall
-      traefik.protocol:                                  https
+      traefik.protocol:                                  http
       traefik.port:                                      443
       traefik.frontend.rule:                             Host:${DOMAINNAME}
       traefik.frontend.headers.SSLHost:                  ${DOMAINNAME}
