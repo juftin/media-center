@@ -9,9 +9,13 @@
 # SENSITIVE FILES
 .env
 .htpasswd
+.env_former
 
 # UNWANTED FILES
 __pycache__/*
 */__pycache__/*
 .DS_Store
 .idea/*
+
+# NGINX FILES
+shared/nginx/proxy-confs/*.sample
