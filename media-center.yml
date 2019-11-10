@@ -230,8 +230,8 @@ services:
       traefik:
         ipv4_address:                                    192.168.101.5
     ports:
-      - 80:80
-      - 442:443
+      - 8008:80
+      - 8443:443
     labels:
       com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
