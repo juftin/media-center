@@ -436,8 +436,8 @@ services:
       traefik.backend:                                   sonarr
       traefik.protocol:                                  http
       traefik.port:                                      8989
-      traefik.frontend.rule:                             Host:sonarr.${DOMAINNAME}
-      traefik.frontend.headers.SSLHost:                  sonarr.${DOMAINNAME}
+      traefik.frontend.rule:                             Host:${DOMAINNAME}/sonarr
+      traefik.frontend.headers.SSLHost:                  ${DOMAINNAME}
       traefik.docker.network:                            traefik
       traefik.frontend.passHostHeader:                   true
       traefik.frontend.headers.SSLForceHost:             true
