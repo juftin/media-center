@@ -623,7 +623,7 @@ services:
     image:                                               linuxserver/nextcloud:latest
     volumes:
       - ${DOCKER_DIR}/nextcloud/config:/config
-      - ${NAS_MOUNT_1}:/data
+      - ${NAS_MOUNT_1}:/data/share
       - ${DOCKER_DIR}/shared:/shared
       - ${DOCKER_DIR}/shared/keys:/config/keys
     ports:
@@ -634,6 +634,8 @@ services:
     networks:
       traefik:
         ipv4_address:                                    192.168.101.12
+      bridge:
+        ipv4_address:                                    192.168.202.6
     restart:                                             unless-stopped
     labels:
       com.ouroboros.enable:                              "true"
@@ -659,6 +661,28 @@ services:
       traefik.frontend.auth.forward.address:             "http://oauth:4181"
       traefik.frontend.auth.forward.authResponseHeaders: X-Forwarded-User
       traefik.frontend.auth.forward.trustForwardHeader:  true
+
+#######################################################################################
+# POSTGRESQL CONFIGURATION
+#######################################################################################
+
+  postgres:
+    container_name:                                      postgres
+    image:                                               postgres:latest
+    environment:
+      POSTGRES_PASSWORD:                                 ${DOCKER_PASSWORD}
+      POSTGRES_USER:                                     ${DOCKER_USER_NAME}
+      POSTGRES_DB:                                       ${DOCKER_USER_NAME}
+    volumes:
+      - ${DOCKER_DIR}/postgres/config:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    labels:
+      com.ouroboros.enable:                              "true"
+    restart:                                             unless-stopped
+    networks:
+      bridge:
+        ipv4_address:                                    192.168.202.7
 
 #############################
 #  NO-IP CONFIGURATION
