@@ -670,7 +670,7 @@ services:
     container_name:                                      postgres
     image:                                               postgres:latest
     environment:
-      POSTGRES_PASSWORD:                                 ${DOCKER_PASSWORD}
+      POSTGRES_PASSWORD:                                 ${DOCKER_PASSWORD_RAW}
       POSTGRES_USER:                                     ${DOCKER_USER_NAME}
       POSTGRES_DB:                                       ${DOCKER_USER_NAME}
     volumes:
