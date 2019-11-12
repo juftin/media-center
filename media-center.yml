@@ -167,51 +167,6 @@ services:
       traefik.frontend.auth.forward.trustForwardHeader:  true
 
 ############################
-# ORGANIZR CONFIGURATION
-############################
-
-  # organizr:
-  #   container_name:                                    organizr
-  #   image:                                             organizrtools/organizr-v2
-  #   environment:
-  #     PUID:                                            ${PUID}
-  #     PGID:                                            ${PGID}
-  #     TZ:                                              ${TZ}
-  #   volumes:
-  #     - ${DOCKER_DIR}/organizr/config:/config
-  #     - ${DOCKER_DIR}/shared:/shared
-  #   restart:                                           unless-stopped
-  #   networks:
-  #     traefik:
-  #       ipv4_address:                                  192.168.101.5
-  #   ports:
-  #     - 8089:80
-  #   labels:
-  #     com.ouroboros.enable:                            "true"
-  #     traefik.enable:                                  true
-  #     traefik.backend:                                 organizr
-  #     traefik.protocol:                                http
-  #     traefik.port:                                    80
-  #     traefik.frontend.rule:                           Host:${DOMAINNAME}
-  #     traefik.frontend.headers.SSLHost:                ${DOMAINNAME}
-  #     traefik.docker.network:                          traefik
-  #     traefik.frontend.passHostHeader:                 true
-  #     traefik.frontend.headers.SSLForceHost:           true
-  #     traefik.frontend.headers.SSLRedirect:            true
-  #     traefik.frontend.headers.browserXSSFilter:       true
-  #     traefik.frontend.headers.contentTypeNosniff:     true
-  #     traefik.frontend.headers.forceSTSHeader:         true
-  #     traefik.frontend.headers.STSSeconds:             315360000
-  #     traefik.frontend.headers.STSIncludeSubdomains:   true
-  #     traefik.frontend.headers.STSPreload:             true
-  #     traefik.frontend.headers.customResponseHeaders:  X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
-  #     traefik.frontend.headers.frameDeny:              true
-  #     traefik.frontend.headers.customFrameOptionsValue: 'allow-from https:${DOMAINNAME}'
-  #     traefik.frontend.auth.forward.address:           "http://oauth:4181"
-  #     traefik.frontend.auth.forward.authResponseHeaders: X-Forwarded-User
-  #     traefik.frontend.auth.forward.trustForwardHeader: true
-
-############################
 # HEIMDALL CONFIGURATION
 ############################
 
@@ -663,47 +618,47 @@ services:
 #  NEXTCLOUD CONFIGURATION
 #############################
 
-  # nextcloud:
-  #   container_name:                                    nextcloud
-  #   image:                                             linuxserver/nextcloud:latest
-  #   volumes:
-  #     - ${DOCKER_DIR}/nextcloud:/config
-  #     - ${NAS_MOUNT_1}:/data
-  #     - ${DOCKER_DIR}/shared:/shared
-  #     - ${DOCKER_DIR}/shared/keys:/config/keys
-  #   ports:
-  #     - 7005:443
-  #   environment:
-  #     PUID:                                            ${PUID}
-  #     PGID:                                            ${PGID}
-  #   networks:
-  #     traefik:
-  #       ipv4_address:                                  192.168.101.11
-  #   restart:                                           unless-stopped
-  #   labels:
-  #     com.ouroboros.enable:                            "true"
-  #     traefik.enable:                                  true
-  #     traefik.backend:                                 nextcloud
-  #     traefik.protocol:                                http
-  #     traefik.port:                                    443
-  #     traefik.frontend.rule:                           Host:nextcloud.${DOMAINNAME}
-  #     traefik.frontend.headers.SSLHost:                nextcloud.${DOMAINNAME}
-  #     traefik.docker.network:                          traefik
-  #     traefik.frontend.passHostHeader:                 true
-  #     traefik.frontend.headers.SSLForceHost:           true
-  #     traefik.frontend.headers.SSLRedirect:            true
-  #     traefik.frontend.headers.browserXSSFilter:       true
-  #     traefik.frontend.headers.contentTypeNosniff:     true
-  #     traefik.frontend.headers.forceSTSHeader:         true
-  #     traefik.frontend.headers.STSSeconds:             315360000
-  #     traefik.frontend.headers.STSIncludeSubdomains:   true
-  #     traefik.frontend.headers.STSPreload:             true
-  #     traefik.frontend.headers.customResponseHeaders:  X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
-  #     traefik.frontend.headers.frameDeny:              true
-  #     traefik.frontend.headers.customFrameOptionsValue: 'allow-from https:${DOMAINNAME}'
-  #     traefik.frontend.auth.forward.address:           "http://oauth:4181"
-  #     traefik.frontend.auth.forward.authResponseHeaders: X-Forwarded-User
-  #     traefik.frontend.auth.forward.trustForwardHeader: true
+  nextcloud:
+    container_name:                                      nextcloud
+    image:                                               linuxserver/nextcloud:latest
+    volumes:
+      - ${DOCKER_DIR}/nextcloud:/config
+      - ${NAS_MOUNT_1}:/data
+      - ${DOCKER_DIR}/shared:/shared
+      - ${DOCKER_DIR}/shared/keys:/config/keys
+    ports:
+      - 7005:443
+    environment:
+      PUID:                                              ${PUID}
+      PGID:                                              ${PGID}
+    networks:
+      traefik:
+        ipv4_address:                                    192.168.101.12
+    restart:                                             unless-stopped
+    labels:
+      com.ouroboros.enable:                              "true"
+      traefik.enable:                                    true
+      traefik.backend:                                   nextcloud
+      traefik.protocol:                                  https
+      traefik.port:                                      443
+      traefik.frontend.rule:                             Host:nextcloud.${DOMAINNAME}
+      traefik.frontend.headers.SSLHost:                  nextcloud.${DOMAINNAME}
+      traefik.docker.network:                            traefik
+      traefik.frontend.passHostHeader:                   true
+      traefik.frontend.headers.SSLForceHost:             true
+      traefik.frontend.headers.SSLRedirect:              true
+      traefik.frontend.headers.browserXSSFilter:         true
+      traefik.frontend.headers.contentTypeNosniff:       true
+      traefik.frontend.headers.forceSTSHeader:           true
+      traefik.frontend.headers.STSSeconds:               315360000
+      traefik.frontend.headers.STSIncludeSubdomains:     true
+      traefik.frontend.headers.STSPreload:               true
+      traefik.frontend.headers.customResponseHeaders:    X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
+      traefik.frontend.headers.frameDeny:                true
+      traefik.frontend.headers.customFrameOptionsValue:  'allow-from https:${DOMAINNAME}'
+      traefik.frontend.auth.forward.address:             "http://oauth:4181"
+      traefik.frontend.auth.forward.authResponseHeaders: X-Forwarded-User
+      traefik.frontend.auth.forward.trustForwardHeader:  true
 
 #############################
 #  NO-IP CONFIGURATION
