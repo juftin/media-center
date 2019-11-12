@@ -622,7 +622,7 @@ services:
     container_name:                                      nextcloud
     image:                                               linuxserver/nextcloud:latest
     volumes:
-      - ${DOCKER_DIR}/nextcloud:/config
+      - ${DOCKER_DIR}/nextcloud/config:/config
       - ${NAS_MOUNT_1}:/data
       - ${DOCKER_DIR}/shared:/shared
       - ${DOCKER_DIR}/shared/keys:/config/keys
