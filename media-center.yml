@@ -674,7 +674,7 @@ services:
       POSTGRES_USER:                                     ${DOCKER_USER_NAME}
       POSTGRES_DB:                                       ${DOCKER_USER_NAME}
     volumes:
-      - ${DOCKER_DIR}/postgres/config:/var/lib/postgresql/data
+      - ${DOCKER_DIR}/postgres/config/data:/var/lib/postgresql/data
     ports:
       - 5432:5432
     labels:
