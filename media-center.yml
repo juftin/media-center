@@ -266,7 +266,7 @@ services:
       TRANSMISSION_WEB_UI:                               combustion
       TRANSMISSION_DOWNLOAD_DIR:                         /downloads
       LOCAL_NETWORK:                                     ${LOCAL_NETWORK}
-      TRANSMISSION_RPC_AUTHENTICATION_REQUIRED:          true
+      TRANSMISSION_RPC_AUTHENTICATION_REQUIRED:          "true"
       TRANSMISSION_RPC_USERNAME:                         ${DOCKER_USER_NAME}
       TRANSMISSION_RPC_PASSWORD:                         ${DOCKER_PASSWORD_RAW}
       TZ:                                                ${TZ}
