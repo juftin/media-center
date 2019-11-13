@@ -286,7 +286,7 @@ services:
       - /dev/net/tun
     networks:
       traefik:
-        ipv4_address:                                    ${TRAEFIK_SUBNET}.6
+        ipv4_address:                                    ${TRAEFIK_SUBNET}.32
     ports:
        - 9091:9091
     restart:                                             ${RESTART_POLICY}
@@ -393,7 +393,7 @@ services:
       - 8989:8989
     networks:
       traefik:
-        ipv4_address:                                    ${TRAEFIK_SUBNET}.32
+        ipv4_address:                                    ${TRAEFIK_SUBNET}.8
     restart:                                             ${RESTART_POLICY}
     depends_on:
      - traefik
