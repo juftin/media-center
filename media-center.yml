@@ -23,9 +23,6 @@ services:
     hostname:                                            traefik
     image:                                               traefik:v1.7.16
     domainname:                                          ${DOMAINNAME}
-    environment:
-      CF_API_EMAIL:                                      ${CLOUDFLARE_EMAIL}
-      CF_API_KEY:                                        ${CLOUDFLARE_API_KEY}
     ports:
       - 80:80
       - 443:443
@@ -37,12 +34,14 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ${DOCKER_DIR}/traefik/config:/etc/traefik
       - ${DOCKER_DIR}/shared:/shared
-    restart:                                             unless-stopped
     networks:
       traefik:
         ipv4_address:                                    192.168.101.2
       bridge:
         ipv4_address:                                    192.168.202.2
+    restart:                                             unless-stopped
+    depends_on:
+      - oauth
     labels:
       com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
@@ -76,12 +75,6 @@ services:
     container_name:                                      oauth
     image:                                               thomseddon/traefik-forward-auth:latest
     hostname:                                            oauth
-    restart:                                             unless-stopped
-    networks:
-      traefik:
-        ipv4_address:                                    192.168.101.3
-      bridge:
-        ipv4_address:                                    192.168.202.3
     environment:
       PROVIDERS_GOOGLE_CLIENT_ID:                        ${GOOGLE_CLIENT_ID}
       PROVIDERS_GOOGLE_CLIENT_SECRET:                    ${GOOGLE_CLIENT_SECRET}
@@ -93,6 +86,12 @@ services:
       WHITELIST:                                         ${OAUTH_WHITELIST}
       LOG_LEVEL:                                         info
       LIFETIME:                                          2592000 # 30 DAYS
+    networks:
+      traefik:
+        ipv4_address:                                    192.168.101.3
+      bridge:
+        ipv4_address:                                    192.168.202.3
+    restart:                                             unless-stopped
     labels:
       com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
@@ -135,12 +134,14 @@ services:
       - ${DOCKER_DIR}/portainer/config:/data
       - ${DOCKER_DIR}/shared:/shared
     command:                                             -H unix:///var/run/docker.sock
-    restart:                                             unless-stopped
     networks:
       traefik:
         ipv4_address:                                    192.168.101.4
     ports:
       - 9000:9000
+    restart:                                             unless-stopped
+    depends_on:
+     - traefik
     labels:
       com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
@@ -180,13 +181,15 @@ services:
     volumes:
       - ${DOCKER_DIR}/heimdall/config:/config
       - ${DOCKER_DIR}/shared:/shared
-    restart:                                             unless-stopped
     networks:
       traefik:
         ipv4_address:                                    192.168.101.5
     ports:
       - 8008:80
       - 8443:443
+    restart:                                             unless-stopped
+    depends_on:
+     - traefik
     labels:
       com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
@@ -278,12 +281,14 @@ services:
       - NET_ADMIN
     devices:
       - /dev/net/tun
-    restart:                                             unless-stopped
     networks:
       traefik:
         ipv4_address:                                    192.168.101.6
     ports:
        - 9091:9091
+    restart:                                             unless-stopped
+    depends_on:
+     - traefik
     labels:
       com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
@@ -331,12 +336,14 @@ services:
       - ${MOVIE_DIR}:/movies
       # - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_DIR}/shared:/shared
-    restart:                                             unless-stopped
     networks:
       traefik:
         ipv4_address:                                    192.168.101.7
     ports:
       - 7878:7878
+    restart:                                             unless-stopped
+    depends_on:
+     - traefik
     labels:
       com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
@@ -380,12 +387,14 @@ services:
       - ${TV_DIR}:/tv
       # - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_DIR}/shared:/shared
-    restart:                                             unless-stopped
     ports:
       - 8989:8989
     networks:
       traefik:
         ipv4_address:                                    192.168.101.8
+    restart:                                             unless-stopped
+    depends_on:
+     - traefik
     labels:
       traefik.enable:                                    true
       traefik.backend:                                   sonarr
@@ -453,12 +462,14 @@ services:
       PUID:                                              ${PUID}
       PGID:                                              ${PGID}
       TZ:                                                ${TZ}
-    restart:                                             unless-stopped
     networks:
       traefik:
         ipv4_address:                                    192.168.101.9
     ports:
       - 8181:8181
+    restart:                                             unless-stopped
+    depends_on:
+     - traefik
     labels:
       com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
@@ -498,12 +509,14 @@ services:
     volumes:
       - ${DOCKER_DIR}/ombi/config:/config
       - ${DOCKER_DIR}/shared:/shared
-    restart:                                             unless-stopped
     networks:
       traefik:
         ipv4_address:                                    192.168.101.10
     ports:
       - 3579:3579
+    restart:                                             unless-stopped
+    depends_on:
+     - traefik
     labels:
       com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
@@ -550,13 +563,15 @@ services:
       - ${COMPLETED_DOWNLOADS}:/downloads
       - "/etc/localtime:/etc/localtime:ro"
       - ${DOCKER_DIR}/shared:/shared
-    restart:                                             unless-stopped
     networks:
       traefik:
         ipv4_address:                                    192.168.101.11
     ports:
     - published:                                         9117
       target:                                            9117
+    restart:                                             unless-stopped
+    depends_on:
+     - traefik
     labels:
       com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
@@ -614,9 +629,9 @@ services:
       bridge:
         ipv4_address:                                    192.168.202.5
 
-#############################
+#######################################################################################
 #  NEXTCLOUD CONFIGURATION
-#############################
+#######################################################################################
 
   nextcloud:
     container_name:                                      nextcloud
@@ -637,6 +652,8 @@ services:
       bridge:
         ipv4_address:                                    192.168.202.6
     restart:                                             unless-stopped
+    depends_on:
+     - traefik
     labels:
       com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
@@ -684,9 +701,9 @@ services:
       bridge:
         ipv4_address:                                    192.168.202.7
 
-#############################
-#  NO-IP CONFIGURATION
-#############################
+#######################################################################################
+#  DUCKDNS CONFIGURATION
+#######################################################################################
 
   # no-ip:
   #   image:                                             coppit/no-ip:latest
