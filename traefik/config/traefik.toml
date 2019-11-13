@@ -1,4 +1,4 @@
-logLevel = "DEBUG" #DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+logLevel = "ERROR" #DEBUG, INFO, WARN, ERROR, FATAL, PANIC
 InsecureSkipVerify = true
 defaultEntryPoints = ["https", "http"]
 
@@ -32,7 +32,6 @@ onDemand = false
    main = "juftin.com"
 [[acme.domains]]
    main = "*.juftin.com"
-
 # CONNECTION TO DOCKER
 [docker]
 endpoint = "unix:///var/run/docker.sock"

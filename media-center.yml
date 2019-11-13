@@ -266,9 +266,6 @@ services:
       TRANSMISSION_WEB_UI:                               combustion
       TRANSMISSION_DOWNLOAD_DIR:                         /downloads
       LOCAL_NETWORK:                                     ${LOCAL_NETWORK}
-      # TRANSMISSION_RPC_AUTHENTICATION_REQUIRED:        "true"
-      # TRANSMISSION_RPC_USERNAME:                       ${DOCKER_USER_NAME}
-      # TRANSMISSION_RPC_PASSWORD:                       ${DOCKER_PASSWORD_RAW}
       TZ:                                                ${TZ}
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -286,7 +283,7 @@ services:
       - /dev/net/tun
     networks:
       traefik:
-        ipv4_address:                                    ${TRAEFIK_SUBNET}.32
+        ipv4_address:                                    ${TRAEFIK_SUBNET}.6
     ports:
        - 9091:9091
     restart:                                             ${RESTART_POLICY}
@@ -636,8 +633,8 @@ services:
 #######################################################################################
 
   nextcloud:
-    container_name:                                      nextcloud
-    image:                                               linuxserver/nextcloud:latest
+    container_name:                                    nextcloud
+    image:                                             linuxserver/nextcloud:latest
     volumes:
       - ${DOCKER_DIR}/nextcloud/config:/config
       - ${NAS_MOUNT_1}:/data/share
@@ -646,40 +643,40 @@ services:
     ports:
       - 7005:443
     environment:
-      PUID:                                              ${PUID}
-      PGID:                                              ${PGID}
+      PUID:                                            ${PUID}
+      PGID:                                            ${PGID}
     networks:
       traefik:
-        ipv4_address:                                    ${TRAEFIK_SUBNET}.12
+        ipv4_address:                                  ${TRAEFIK_SUBNET}.12
       bridge:
-        ipv4_address:                                    ${INTERNAL_SUBNET}.6
-    restart:                                             ${RESTART_POLICY}
+        ipv4_address:                                  ${INTERNAL_SUBNET}.6
+    restart:                                           ${RESTART_POLICY}
     depends_on:
      - traefik
     labels:
-      com.ouroboros.enable:                              "true"
-      traefik.enable:                                    true
-      traefik.backend:                                   nextcloud
-      traefik.protocol:                                  https
-      traefik.port:                                      443
-      traefik.frontend.rule:                             Host:nextcloud.${DOMAINNAME}
-      traefik.frontend.headers.SSLHost:                  nextcloud.${DOMAINNAME}
-      traefik.docker.network:                            traefik
-      traefik.frontend.passHostHeader:                   true
-      traefik.frontend.headers.SSLForceHost:             true
-      traefik.frontend.headers.SSLRedirect:              true
-      traefik.frontend.headers.browserXSSFilter:         true
-      traefik.frontend.headers.contentTypeNosniff:       true
-      traefik.frontend.headers.forceSTSHeader:           true
-      traefik.frontend.headers.STSSeconds:               315360000
-      traefik.frontend.headers.STSIncludeSubdomains:     true
-      traefik.frontend.headers.STSPreload:               true
-      traefik.frontend.headers.customResponseHeaders:    X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
-      traefik.frontend.headers.frameDeny:                true
-      traefik.frontend.headers.customFrameOptionsValue:  'allow-from https:${DOMAINNAME}'
-      traefik.frontend.auth.forward.address:             "http://oauth:4181"
+      com.ouroboros.enable:                            "true"
+      traefik.enable:                                  true
+      traefik.backend:                                 nextcloud
+      traefik.protocol:                                https
+      traefik.port:                                    443
+      traefik.frontend.rule:                           Host:nextcloud.${DOMAINNAME}
+      traefik.frontend.headers.SSLHost:                nextcloud.${DOMAINNAME}
+      traefik.docker.network:                          traefik
+      traefik.frontend.passHostHeader:                 true
+      traefik.frontend.headers.SSLForceHost:           true
+      traefik.frontend.headers.SSLRedirect:            true
+      traefik.frontend.headers.browserXSSFilter:       true
+      traefik.frontend.headers.contentTypeNosniff:     true
+      traefik.frontend.headers.forceSTSHeader:         true
+      traefik.frontend.headers.STSSeconds:             315360000
+      traefik.frontend.headers.STSIncludeSubdomains:   true
+      traefik.frontend.headers.STSPreload:             true
+      traefik.frontend.headers.customResponseHeaders:  X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
+      traefik.frontend.headers.frameDeny:              true
+      traefik.frontend.headers.customFrameOptionsValue: 'allow-from https:${DOMAINNAME}'
+      traefik.frontend.auth.forward.address:           "http://oauth:4181"
       traefik.frontend.auth.forward.authResponseHeaders: X-Forwarded-User
-      traefik.frontend.auth.forward.trustForwardHeader:  true
+      traefik.frontend.auth.forward.trustForwardHeader: true
 
 #######################################################################################
 # POSTGRESQL CONFIGURATION

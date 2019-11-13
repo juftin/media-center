@@ -10,6 +10,8 @@
 .env
 .htpasswd
 .env_former
+.env_prod
+shared/keys/cert.*
 
 # UNWANTED FILES
 __pycache__/*
