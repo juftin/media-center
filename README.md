@@ -2,9 +2,25 @@
 
 Docker Configuration for Running a Media Center at Home.
 
-## Usage
+## Configuration
 
-### Configuration
+### Port Forwarding
+
+In order to reach the outside wotld, you must forward ports `80` and `443` from your server IP address through your router. See your router's manual for Instructions.
+
+### CloudFlare
+
+This configuration was inspired by, and immensely helped by the article at [`https://smarthomebeginner.com`](https://www.smarthomebeginner.com/traefik-reverse-proxy-tutorial-for-docker). Instructions in this article to set up free [`CloudFlare`](https://dash.cloudflare.com/sign-up) services. The CloudFlare section of the article can be found [`here`](https://www.smarthomebeginner.com/traefik-reverse-proxy-tutorial-for-docker/#Dynamic_DNS_or_Your_Own_Domain_Name).
+
+### Google OAuth 2.0
+
+The Google Oauth 2.0 configuration can be found [`here`](https://www.smarthomebeginner.com/google-oauth-with-traefik-docker/#How_do_I_setup_OAuth). This configuration requires Google Authentication to access any services published on the web.
+
+### DuckDNS
+
+A free DuckDNS dynamic DNS subdomain can be set up [`here`]("https://www.duckdns.org/").
+
+### File Configuration
 
 #### `.env`
 
@@ -22,20 +38,22 @@ A blank file named `acme.json` needs to be placed in the the directory `traefik/
       touch traefik/config/acme/acme.json &&
       chmod 600 traefik/config/acme/acme.json
 
-### Set Up
+## Set Up
 
 Most application set up and configuration is straightforward. Please follow the documentation links in the below list of containers for inoformation.
+
+### Networking
+
+Networking information can be found at [`docs/docker_networking.md`](docs/docker_networking.md) folder. For ease of use and interconnection between services, all docker containers have been pre-assigned an IP address.
 
     Heimdall Note:
       enter the full url path of the domain
       in new tabs for a redirect.
       (ie. https://app.example.com)
 
-### Networking
-
-Networking information can be found at [`docs/docker_networking.md`](docs/docker_networking.md) folder. For ease of use and interconnection between services, all docker containers have been pre-assigned an IP address.
-
 * * *
+
+<br/>
 
 * * *
 
