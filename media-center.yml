@@ -36,12 +36,13 @@ services:
       - ${DOCKER_DIR}/shared:/shared
     networks:
       traefik:
-        ipv4_address:                                    192.168.101.2
+        ipv4_address:                                    ${TRAEFIK_SUBNET}.2
       bridge:
-        ipv4_address:                                    192.168.202.2
-    restart:                                             unless-stopped
+        ipv4_address:                                    ${INTERNAL_SUBNET}.2
+    restart:                                             ${RESTART_POLICY}
     depends_on:
       - oauth
+      - duckdns
     labels:
       com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
@@ -88,10 +89,12 @@ services:
       LIFETIME:                                          2592000 # 30 DAYS
     networks:
       traefik:
-        ipv4_address:                                    192.168.101.3
+        ipv4_address:                                    ${TRAEFIK_SUBNET}.3
       bridge:
-        ipv4_address:                                    192.168.202.3
-    restart:                                             unless-stopped
+        ipv4_address:                                    ${INTERNAL_SUBNET}.3
+    restart:                                             ${RESTART_POLICY}
+    depends_on:
+      - duckdns
     labels:
       com.ouroboros.enable:                              "true"
       traefik.enable:                                    true
@@ -136,10 +139,10 @@ services:
     command:                                             -H unix:///var/run/docker.sock
     networks:
       traefik:
-        ipv4_address:                                    192.168.101.4
+        ipv4_address:                                    ${TRAEFIK_SUBNET}.4
     ports:
       - 9000:9000
-    restart:                                             unless-stopped
+    restart:                                             ${RESTART_POLICY}
     depends_on:
      - traefik
     labels:
@@ -183,11 +186,11 @@ services:
       - ${DOCKER_DIR}/shared:/shared
     networks:
       traefik:
-        ipv4_address:                                    192.168.101.5
+        ipv4_address:                                    ${TRAEFIK_SUBNET}.5
     ports:
       - 8008:80
       - 8443:443
-    restart:                                             unless-stopped
+    restart:                                             ${RESTART_POLICY}
     depends_on:
      - traefik
     labels:
@@ -235,10 +238,10 @@ services:
       TZ:                                                ${TZ}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    restart:                                             unless-stopped
+    restart:                                             ${RESTART_POLICY}
     networks:
       bridge:
-        ipv4_address:                                    192.168.202.4
+        ipv4_address:                                    ${INTERNAL_SUBNET}.4
 
 #######################################################################################################################################
 # DOWNLOAD CLIENTS
@@ -263,9 +266,9 @@ services:
       TRANSMISSION_WEB_UI:                               combustion
       TRANSMISSION_DOWNLOAD_DIR:                         /downloads
       LOCAL_NETWORK:                                     ${LOCAL_NETWORK}
-      # TRANSMISSION_RPC_AUTHENTICATION_REQUIRED:        true
-      # TRANSMISSION_RPC_USERNAME:                       ${DOCKER_USER_NAME}
-      # TRANSMISSION_RPC_PASSWORD:                       ${DOCKER_PASSWORD}
+      TRANSMISSION_RPC_AUTHENTICATION_REQUIRED:          true
+      TRANSMISSION_RPC_USERNAME:                         ${DOCKER_USER_NAME}
+      TRANSMISSION_RPC_PASSWORD:                         ${DOCKER_PASSWORD_RAW}
       TZ:                                                ${TZ}
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -283,10 +286,10 @@ services:
       - /dev/net/tun
     networks:
       traefik:
-        ipv4_address:                                    192.168.101.6
+        ipv4_address:                                    ${TRAEFIK_SUBNET}.6
     ports:
        - 9091:9091
-    restart:                                             unless-stopped
+    restart:                                             ${RESTART_POLICY}
     depends_on:
      - traefik
     labels:
@@ -334,14 +337,13 @@ services:
       - ${DOCKER_DIR}/radarr/config:/config
       - ${COMPLETED_DOWNLOADS}:/downloads
       - ${MOVIE_DIR}:/movies
-      # - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_DIR}/shared:/shared
     networks:
       traefik:
-        ipv4_address:                                    192.168.101.7
+        ipv4_address:                                    ${TRAEFIK_SUBNET}.7
     ports:
       - 7878:7878
-    restart:                                             unless-stopped
+    restart:                                             ${RESTART_POLICY}
     depends_on:
      - traefik
     labels:
@@ -385,14 +387,14 @@ services:
       - ${DOCKER_DIR}/sonarr/config:/config
       - ${COMPLETED_DOWNLOADS}:/downloads
       - ${TV_DIR}:/tv
-      # - /etc/localtime:/etc/localtime:ro
+      - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_DIR}/shared:/shared
     ports:
       - 8989:8989
     networks:
       traefik:
-        ipv4_address:                                    192.168.101.8
-    restart:                                             unless-stopped
+        ipv4_address:                                    ${TRAEFIK_SUBNET}.8
+    restart:                                             ${RESTART_POLICY}
     depends_on:
      - traefik
     labels:
@@ -444,7 +446,7 @@ services:
       - ${DOCKER_DIR}/shared:/shared
     labels:
       com.ouroboros.enable:                              "true"
-    restart:                                             unless-stopped
+    restart:                                             ${RESTART_POLICY}
 
 #######################################################################################
 # TAUTULLI CONFIGURATION
@@ -464,10 +466,10 @@ services:
       TZ:                                                ${TZ}
     networks:
       traefik:
-        ipv4_address:                                    192.168.101.9
+        ipv4_address:                                    ${TRAEFIK_SUBNET}.9
     ports:
       - 8181:8181
-    restart:                                             unless-stopped
+    restart:                                             ${RESTART_POLICY}
     depends_on:
      - traefik
     labels:
@@ -511,10 +513,10 @@ services:
       - ${DOCKER_DIR}/shared:/shared
     networks:
       traefik:
-        ipv4_address:                                    192.168.101.10
+        ipv4_address:                                    ${TRAEFIK_SUBNET}.10
     ports:
       - 3579:3579
-    restart:                                             unless-stopped
+    restart:                                             ${RESTART_POLICY}
     depends_on:
      - traefik
     labels:
@@ -565,11 +567,11 @@ services:
       - ${DOCKER_DIR}/shared:/shared
     networks:
       traefik:
-        ipv4_address:                                    192.168.101.11
+        ipv4_address:                                    ${TRAEFIK_SUBNET}.11
     ports:
     - published:                                         9117
       target:                                            9117
-    restart:                                             unless-stopped
+    restart:                                             ${RESTART_POLICY}
     depends_on:
      - traefik
     labels:
@@ -615,7 +617,7 @@ services:
       WORKGROUP:                                         workgroup
       SHARE:                                             "NAS;/mount;yes;no;yes;all;none;;NAS;"
       SHARE2:                                            "juftin;/mount2;yes;no;yes;all;none;;juftin;"
-      TZ:                                                MST7MDT
+      TZ:                                                ${TZ_7}
     volumes:
       - ${NAS_MOUNT_1}:/mount
       - ${NAS_MOUNT_2}:/mount2
@@ -624,10 +626,10 @@ services:
       - "445:445/tcp"
     labels:
       com.ouroboros.enable:                              "true"
-    restart:                                             unless-stopped
+    restart:                                             ${RESTART_POLICY}
     networks:
       bridge:
-        ipv4_address:                                    192.168.202.5
+        ipv4_address:                                    ${INTERNAL_SUBNET}.5
 
 #######################################################################################
 #  NEXTCLOUD CONFIGURATION
@@ -648,10 +650,10 @@ services:
       PGID:                                              ${PGID}
     networks:
       traefik:
-        ipv4_address:                                    192.168.101.12
+        ipv4_address:                                    ${TRAEFIK_SUBNET}.12
       bridge:
-        ipv4_address:                                    192.168.202.6
-    restart:                                             unless-stopped
+        ipv4_address:                                    ${INTERNAL_SUBNET}.6
+    restart:                                             ${RESTART_POLICY}
     depends_on:
      - traefik
     labels:
@@ -696,30 +698,30 @@ services:
       - 5432:5432
     labels:
       com.ouroboros.enable:                              "true"
-    restart:                                             unless-stopped
+    restart:                                             ${RESTART_POLICY}
     networks:
       bridge:
-        ipv4_address:                                    192.168.202.7
+        ipv4_address:                                    ${INTERNAL_SUBNET}.7
 
 #######################################################################################
 #  DUCKDNS CONFIGURATION
 #######################################################################################
 
-  # no-ip:
-  #   image:                                             coppit/no-ip:latest
-  #   container_name:                                    no-ip
-  #   environment:
-  #     USERNAME:                                        ${NO_IP_USER}
-  #     PASSWORD:                                        ${NO_IP_PASSWORD}
-  #     DOMAINS:                                         ${NO_IP_DOMAIN}
-  #     INTERVAL:                                        5m
-  #   volumes:
-  #     - ${DOCKER_DIR}/no-ip/config:/config
-  #     - /etc/localtime:/etc/localtime:ro
-  #   labels:
-  #     com.ouroboros.enable:                            "true"
-  #   privileged:                                        "true"
-  #   restart:                                           unless-stopped
+  duckdns:
+    container_name:                                      duckdns
+    image:                                               linuxserver/duckdns:latest
+    environment:
+      PUID:                                              ${PUID}
+      PGID:                                              ${PGID}
+      TZ:                                                ${TZ}
+      SUBDOMAINS:                                        ${DUCKDNS_SUBDOMAIN}
+      TOKEN:                                             ${DUCKDNS_TOKEN}
+    networks:
+      internal:
+        ipv4_address:                                    ${INTERNAL_SUBNET}.3
+    labels:
+      com.ouroboros.enable:                              "true"
+    restart:                                             ${RESTART_POLICY}
 
 #######################################################################################################################################
 # NETWORKING CONFIGURATION
@@ -730,11 +732,11 @@ networks:
     driver:                                              bridge
     ipam:
       config:
-      - subnet:                                          192.168.101.0/24
+      - subnet:                                          ${TRAEFIK_SUBNET}.0/24
       driver:                                            default
   bridge:
     driver:                                              bridge
     ipam:
       config:
-      - subnet:                                          192.168.202.0/24
+      - subnet:                                          ${INTERNAL_SUBNET}.0/24
       driver:                                            default
