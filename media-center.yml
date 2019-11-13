@@ -717,8 +717,8 @@ services:
       SUBDOMAINS:                                        ${DUCKDNS_SUBDOMAIN}
       TOKEN:                                             ${DUCKDNS_TOKEN}
     networks:
-      internal:
-        ipv4_address:                                    ${INTERNAL_SUBNET}.3
+      bridge:
+        ipv4_address:                                    ${INTERNAL_SUBNET}.8
     labels:
       com.ouroboros.enable:                              "true"
     restart:                                             ${RESTART_POLICY}
