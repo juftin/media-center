@@ -24,7 +24,7 @@ email = "juftin@juftin.com"
 storage="/etc/traefik/acme/acme.json"
 entryPoint = "https"
 acmeLogging=true
-onDemand = false
+# onDemand = false
 [acme.dnsChallenge]
   provider = "cloudflare"
   delayBeforeCheck = 300
