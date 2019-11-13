@@ -393,7 +393,7 @@ services:
       - 8989:8989
     networks:
       traefik:
-        ipv4_address:                                    ${TRAEFIK_SUBNET}.8
+        ipv4_address:                                    ${TRAEFIK_SUBNET}.32
     restart:                                             ${RESTART_POLICY}
     depends_on:
      - traefik
