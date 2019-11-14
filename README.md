@@ -16,7 +16,7 @@ Docker Configuration for Running a Media Center at Home.
     -   [`Networking`](#networking)
 
 
--   `Additional Links`
+-   Additional Links
     -   [`Networking Documentation`](docs/docker_networking.md)
     -   [`Container Information`](docs/docker_containers.md)
 
