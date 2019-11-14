@@ -28,7 +28,7 @@ Docker Configuration for Running a Media Center at Home.
 
 ### Port Forwarding
 
-In order to reach the outside wotld, you must forward ports `80` and `443` from your server IP address through your router. See your router's manual for Instructions.
+In order to reach the outside world, you must forward ports `80` and `443` from your server IP address through your router. See your router's manual for Instructions.
 
 ### CloudFlare
 
@@ -70,7 +70,7 @@ Most application set up and configuration is straightforward. Please follow the 
 
 ### Containers
 
-The full list of containers can be found at [`docs/docker_containers.md`](docs/docker_containres.md). This list contains a brief explanation of each docker container and important links to the source code, documentation, and more.
+The full list of containers can be found at [`docs/docker_containers.md`](docs/docker_containers.md). This list contains a brief explanation of each docker container and important links to the source code, documentation, and more.
 
 ### Networking
 
