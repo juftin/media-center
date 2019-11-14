@@ -2,23 +2,23 @@
 
 Docker Configuration for Running a Media Center at Home.
 
--   [`Configuration`](#configuration)
-    -   [`Port Forwarding`](#port-forwarding)
-    -   [`CloudFlare`](#cloudflare)
-    -   [`Google OAuth 2.0`](#google-oauth-20)
-    -   [`DuckDNS`](#duckdns)
-    -   [`File Configuration`](#file-configuration)
-        -   [`.env`](#env)
-        -   [`traefik.toml`](#traefiktoml)
-        -   [`acme.json`](#acmejson)
--   [`Set Up`](#set-up)
-    -   [`Containers`](#containers)
-    -   [`Networking`](#networking)
+-   [Configuration](#configuration)
+    -   [Port Forwarding](#port-forwarding)
+    -   [CloudFlare](#cloudflare)
+    -   [Google OAuth 2.0](#google-oauth-20)
+    -   [DuckDNS](#duckdns)
+    -   [File Configuration](#file-configuration)
+        -   [.env](#env)
+        -   [traefik.toml](#traefiktoml)
+        -   [acme.json](#acmejson)
+-   [Set Up](#set-up)
+    -   [Containers](#containers)
+    -   [Networking](#networking)
 
 
 -   Additional Links
-    -   [`Networking Documentation`](docs/docker_networking.md)
-    -   [`Container Information`](docs/docker_containers.md)
+    -   [Networking Documentation](docs/docker_networking.md)
+    -   [Container Information](docs/docker_containers.md)
 
 * * *
 
@@ -54,7 +54,7 @@ The [`traefik/config/traefik.toml`](traefik/config/traefik.toml) file needs mini
 
 #### `acme.json`
 
-A blank file named `acme.json` needs to be placed in the the directory `traefik/config/acme` needs to be created and a blank file named `acme.json` must be placed inside. This file needs to have the proper permissions (`600`). This operation can be performed by running:
+A directory named `traefik/config/acme` needs to be created and a blank file named `acme.json` must be placed inside. This file needs to have the proper permissions (`600`). This file will be populated by the `traefik` service. This operation can be performed by running:
 
     mkdir traefik/config/acme && \
       touch traefik/config/acme/acme.json &&
