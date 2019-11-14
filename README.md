@@ -57,7 +57,7 @@ The [`traefik/config/traefik.toml`](traefik/config/traefik.toml) file needs mini
 A directory named `traefik/config/acme` needs to be created and a blank file named `acme.json` must be placed inside. This file needs to have the proper permissions (`600`). This file will be populated by the `traefik` service. This operation can be performed by running:
 
     mkdir traefik/config/acme && \
-      touch traefik/config/acme/acme.json &&
+      touch traefik/config/acme/acme.json && \
       chmod 600 traefik/config/acme/acme.json
 
 * * *
