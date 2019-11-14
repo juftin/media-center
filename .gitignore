@@ -1,25 +1,17 @@
 #  CONFIGURATION FOLDERS
-jackett/config/*
-pihole/etc-dnsmasq.d/*
-pihole/etc-pihole/*
-plex/config/*
-postgres/postgres/*
-radarr/config/*
-sonarr/config/*
-transmission/config/*
-transmission/watch/*
-portainer/config/*
+/*/config/*
+/*/watch/*
+/*/logs/*
 
 # DIRECTORY PLACEHOLDERS
-!transmission/config/dir.placeholder
-!sonarr/config/dir.placeholder
-!portainer/config/dir.placeholder
-!plex/config/dir.placeholder
-!transmission/config/dir.placeholder
-!jackett/config/dir.placeholder
+!.gitkeep
 
-# PASSWORD FILES
+# SENSITIVE FILES
 .env
+.htpasswd
+.env_former
+.env_prod
+shared/keys/cert.*
 
 # UNWANTED FILES
 __pycache__/*
@@ -27,9 +19,5 @@ __pycache__/*
 .DS_Store
 .idea/*
 
-# UNREADY CONTAINERS
-postgres/*
-nginx/*.*
-
-# OVPN FILES
-nordvpn/ovpn/*.ovpn
+# NGINX FILES
+shared/nginx/proxy-confs/*.sample
