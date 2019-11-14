@@ -3,9 +3,22 @@
 Docker Configuration for Running a Media Center at Home.
 
 -   [`Configuration`](#configuration)
-  - [`Port Forwarding`](#port_forwarding)
--   [`Networking Documentation`](docs/docker_networking.md)
--   [`Container Information`](docs/docker_containers.md)
+    -   [`Port Forwarding`](#port-forwarding)
+    -   [`CloudFlare`](#cloudflare)
+    -   [`Google OAuth 2.0`](#google_oauth-2.0)
+    -   [`DuckDNS`](#duckdns)
+    -   [`File Configuration`](#file-configuration)
+        -   [`.env`](#.env)
+        -   [`traefik.toml`](#traefik.toml)
+        -   [`acme.json`](#acme.json)
+-   [`Set Up`](#set-up)
+    -   [`Containers`](#containers)
+    -   [`Networking`](#networking)
+
+
+-   `Additional Links`
+    -   [`Networking Documentation`](docs/docker_networking.md)
+    -   [`Container Information`](docs/docker_containers.md)
 
 * * *
 
@@ -49,6 +62,8 @@ A blank file named `acme.json` needs to be placed in the the directory `traefik/
 
 * * *
 
+* * *
+
 ## Set Up
 
 Most application set up and configuration is straightforward. Please follow the documentation links in the below list of containers for inoformation.
@@ -60,6 +75,10 @@ The full list of containers can be found at [`docs/docker_containers.md`](docs/d
 ### Networking
 
 Networking information can be found at [`docs/docker_networking.md`](docs/docker_networking.md). For ease of use and interconnection between services, all docker containers have been pre-assigned an IP address.
+
+* * *
+
+* * *
 
 <br/>
 <br/>
