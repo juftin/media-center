@@ -51,9 +51,9 @@ The `traefik` network is used for docker containers exposed to the outside world
     -   Port: `9091`
     -   Exposed Ports: `9091`
 
-### bridge
+### internal
 
-The `bridge` network is used for internal communication between backend containers and containers that do not need to be exposed on the `traefik` network. By default, this network is on subnet `192.168.202.0/24`. This subnet can be changed by setting the `INTERNAL_SUBNET` variable in your `.env` file. The below IP addresses can be used for configuring connections between the services.
+The `internal` network is used for internal communication between backend containers and containers that do not need to be exposed on the `traefik` network. By default, this network is on subnet `192.168.202.0/24`. This subnet can be changed by setting the `INTERNAL_SUBNET` variable in your `.env` file. The below IP addresses can be used for configuring connections between the services.
 
 -   duckdns
     -   IP Address: `192.168.202.8`

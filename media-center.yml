@@ -37,7 +37,7 @@ services:
     networks:
       traefik:
         ipv4_address:                                    ${TRAEFIK_SUBNET}.2
-      bridge:
+      internal:
         ipv4_address:                                    ${INTERNAL_SUBNET}.2
     restart:                                             ${RESTART_POLICY}
     depends_on:
@@ -90,7 +90,7 @@ services:
     networks:
       traefik:
         ipv4_address:                                    ${TRAEFIK_SUBNET}.3
-      bridge:
+      internal:
         ipv4_address:                                    ${INTERNAL_SUBNET}.3
     restart:                                             ${RESTART_POLICY}
     depends_on:
@@ -240,7 +240,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     restart:                                             ${RESTART_POLICY}
     networks:
-      bridge:
+      internal:
         ipv4_address:                                    ${INTERNAL_SUBNET}.4
 
 #######################################################################################################################################
@@ -625,7 +625,7 @@ services:
       com.ouroboros.enable:                              "true"
     restart:                                             ${RESTART_POLICY}
     networks:
-      bridge:
+      internal:
         ipv4_address:                                    ${INTERNAL_SUBNET}.5
 
 #######################################################################################
@@ -650,7 +650,7 @@ services:
     networks:
       traefik:
         ipv4_address:                                    ${TRAEFIK_SUBNET}.12
-      bridge:
+      internal:
         ipv4_address:                                    ${INTERNAL_SUBNET}.6
     restart:                                             ${RESTART_POLICY}
     depends_on:
@@ -699,7 +699,7 @@ services:
       com.ouroboros.enable:                              "true"
     restart:                                             ${RESTART_POLICY}
     networks:
-      bridge:
+      internal:
         ipv4_address:                                    ${INTERNAL_SUBNET}.7
 
 #######################################################################################
@@ -716,7 +716,7 @@ services:
       SUBDOMAINS:                                        ${DUCKDNS_SUBDOMAIN}
       TOKEN:                                             ${DUCKDNS_TOKEN}
     networks:
-      bridge:
+      internal:
         ipv4_address:                                    ${INTERNAL_SUBNET}.8
     labels:
       com.ouroboros.enable:                              "true"
@@ -733,7 +733,7 @@ networks:
       config:
       - subnet:                                          ${TRAEFIK_SUBNET}.0/24
       driver:                                            default
-  bridge:
+  internal:
     driver:                                              bridge
     ipam:
       config:
