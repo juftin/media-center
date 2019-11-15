@@ -10,6 +10,7 @@
 .env
 .htpasswd
 .env_former
+.env_local
 .env_prod
 shared/keys/cert.*
 
