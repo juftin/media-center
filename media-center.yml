@@ -616,6 +616,7 @@ services:
       SHARE2:                                            "juftin;/mount2;yes;no;yes;all;none;;juftin;"
       TZ:                                                ${TZ_7}
     volumes:
+      - ${DOCKER_DIR}/samba/config:/etc/samba
       - ${NAS_MOUNT_1}:/mount
       - ${NAS_MOUNT_2}:/mount2
     ports:
