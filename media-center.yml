@@ -728,7 +728,6 @@ services:
       traefik.frontend.rule:                             Host:resume.${DOMAINNAME}
       traefik.frontend.headers.SSLHost:                  resume.${DOMAINNAME}
       traefik.docker.network:                            traefik
-      traefik.frontend.passHostHeader:                   true
       traefik.frontend.headers.SSLForceHost:             true
       traefik.frontend.headers.SSLRedirect:              true
       traefik.frontend.headers.browserXSSFilter:         true
@@ -739,7 +738,6 @@ services:
       traefik.frontend.headers.STSPreload:               true
       traefik.frontend.headers.customResponseHeaders:    X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
       traefik.frontend.headers.frameDeny:                true
-      traefik.frontend.headers.customFrameOptionsValue:  'allow-from https:${DOMAINNAME}'
 
 #######################################################################################
 #  DUCKDNS CONFIGURATION
