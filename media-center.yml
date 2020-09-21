@@ -718,13 +718,15 @@ services:
       traefik:
         ipv4_address:                                    ${TRAEFIK_SUBNET}.13
     restart:                                             ${RESTART_POLICY}
+    ports:
+      - 7856:7856
     depends_on:
      - traefik
     labels:
       traefik.enable:                                    true
       traefik.backend:                                   resume
       traefik.protocol:                                  https
-      traefik.port:                                      90
+      traefik.port:                                      7856
       traefik.frontend.rule:                             Host:resume.${DOMAINNAME}
       traefik.frontend.headers.SSLHost:                  resume.${DOMAINNAME}
       traefik.docker.network:                            traefik
