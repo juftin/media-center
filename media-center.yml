@@ -614,11 +614,13 @@ services:
       WORKGROUP:                                         workgroup
       SHARE:                                             "NAS;/mount;yes;no;yes;all;none;;NAS;"
       SHARE2:                                            "juftin;/mount2;yes;no;yes;all;none;;juftin;"
+      SHARE3:                                            "storage_128;/mount3;yes;no;yes;all;none;;juftin;"
       TZ:                                                ${TZ_7}
     volumes:
       - ${DOCKER_DIR}/samba/config:/etc/samba
       - ${NAS_MOUNT_1}:/mount
       - ${NAS_MOUNT_2}:/mount2
+      - ${NAS_MOUNT_3}:/mount3
     ports:
       - "139:139/tcp"
       - "445:445/tcp"
