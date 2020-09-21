@@ -651,8 +651,6 @@ services:
     networks:
       traefik:
         ipv4_address:                                    ${TRAEFIK_SUBNET}.12
-      internal:
-        ipv4_address:                                    ${INTERNAL_SUBNET}.6
     restart:                                             ${RESTART_POLICY}
     depends_on:
      - traefik
@@ -661,7 +659,7 @@ services:
       traefik.enable:                                    true
       traefik.backend:                                   nextcloud
       traefik.protocol:                                  https
-      traefik.port:                                      443
+      traefik.port:                                      90
       traefik.frontend.rule:                             Host:nextcloud.${DOMAINNAME}
       traefik.frontend.headers.SSLHost:                  nextcloud.${DOMAINNAME}
       traefik.docker.network:                            traefik
@@ -702,6 +700,44 @@ services:
     networks:
       internal:
         ipv4_address:                                    ${INTERNAL_SUBNET}.7
+
+#######################################################################################
+#  RESUME CONFIGURATION
+#######################################################################################
+
+  resume:
+    container_name:                                      resume
+    volumes:
+      - ${DOCKER_DIR}/resume/
+    build:
+      context: ${DOCKER_DIR}/resume/
+      dockerfile: Dockerfile
+    networks:
+      traefik:
+        ipv4_address:                                    ${TRAEFIK_SUBNET}.13
+    restart:                                             ${RESTART_POLICY}
+    depends_on:
+     - traefik
+    labels:
+      traefik.enable:                                    true
+      traefik.backend:                                   resume
+      traefik.protocol:                                  https
+      traefik.port:                                      443
+      traefik.frontend.rule:                             Host:resume.${DOMAINNAME}
+      traefik.frontend.headers.SSLHost:                  resume.${DOMAINNAME}
+      traefik.docker.network:                            traefik
+      traefik.frontend.passHostHeader:                   true
+      traefik.frontend.headers.SSLForceHost:             true
+      traefik.frontend.headers.SSLRedirect:              true
+      traefik.frontend.headers.browserXSSFilter:         true
+      traefik.frontend.headers.contentTypeNosniff:       true
+      traefik.frontend.headers.forceSTSHeader:           true
+      traefik.frontend.headers.STSSeconds:               315360000
+      traefik.frontend.headers.STSIncludeSubdomains:     true
+      traefik.frontend.headers.STSPreload:               true
+      traefik.frontend.headers.customResponseHeaders:    X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
+      traefik.frontend.headers.frameDeny:                true
+      traefik.frontend.headers.customFrameOptionsValue:  'allow-from https:${DOMAINNAME}'
 
 #######################################################################################
 #  DUCKDNS CONFIGURATION
