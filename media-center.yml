@@ -742,7 +742,6 @@ services:
       traefik.frontend.headers.STSPreload:               true
       traefik.frontend.headers.customResponseHeaders:    X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
       traefik.frontend.headers.frameDeny:                true
-      traefik.frontend.headers.customFrameOptionsValue:  'allow-from https:${DOMAINNAME}'
       com.ouroboros.enable:                              "true"
 
 #######################################################################################
