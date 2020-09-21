@@ -1,4 +1,4 @@
-FROM ubuntu:20.0.4
+FROM ubuntu:20.04
 MAINTAINER Justin Flannery "juftin@juftin.com"
 
 USER root

@@ -661,7 +661,7 @@ services:
       traefik.enable:                                    true
       traefik.backend:                                   nextcloud
       traefik.protocol:                                  https
-      traefik.port:                                      90
+      traefik.port:                                      443
       traefik.frontend.rule:                             Host:nextcloud.${DOMAINNAME}
       traefik.frontend.headers.SSLHost:                  nextcloud.${DOMAINNAME}
       traefik.docker.network:                            traefik
@@ -724,7 +724,7 @@ services:
       traefik.enable:                                    true
       traefik.backend:                                   resume
       traefik.protocol:                                  https
-      traefik.port:                                      443
+      traefik.port:                                      90
       traefik.frontend.rule:                             Host:resume.${DOMAINNAME}
       traefik.frontend.headers.SSLHost:                  resume.${DOMAINNAME}
       traefik.docker.network:                            traefik
