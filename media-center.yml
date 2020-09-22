@@ -614,10 +614,13 @@ services:
       WORKGROUP:                                         workgroup
       SHARE:                                             "NAS;/mount;yes;no;yes;all;none;;NAS;"
       SHARE2:                                            "juftin;/mount2;yes;no;yes;all;none;;juftin;"
+      SHARE3:                                            "storage_128;/mount3;yes;no;yes;all;none;;juftin;"
       TZ:                                                ${TZ_7}
     volumes:
+      - ${DOCKER_DIR}/samba/config:/etc/samba
       - ${NAS_MOUNT_1}:/mount
       - ${NAS_MOUNT_2}:/mount2
+      - ${NAS_MOUNT_3}:/mount3
     ports:
       - "139:139/tcp"
       - "445:445/tcp"
@@ -650,8 +653,6 @@ services:
     networks:
       traefik:
         ipv4_address:                                    ${TRAEFIK_SUBNET}.12
-      internal:
-        ipv4_address:                                    ${INTERNAL_SUBNET}.6
     restart:                                             ${RESTART_POLICY}
     depends_on:
      - traefik
@@ -701,6 +702,47 @@ services:
     networks:
       internal:
         ipv4_address:                                    ${INTERNAL_SUBNET}.7
+
+#######################################################################################
+#  RESUME CONFIGURATION
+#######################################################################################
+
+  resume:
+    container_name:                                      resume
+    build:
+      context: ${DOCKER_DIR}/resume/
+      dockerfile: Dockerfile
+    networks:
+      traefik:
+        ipv4_address:                                    ${TRAEFIK_SUBNET}.13
+    volumes:
+      - ${DOCKER_DIR}/resume/web/:/var/www/html/
+      - ${DOCKER_DIR}/resume/web/:/usr/share/nginx/html/
+    restart:                                             ${RESTART_POLICY}
+    ports:
+      - 7856:7856
+    depends_on:
+     - traefik
+    labels:
+      traefik.enable:                                    true
+      traefik.backend:                                   resume
+      traefik.protocol:                                  http
+      traefik.port:                                      7856
+      traefik.frontend.rule:                             Host:resume.${DOMAINNAME}
+      traefik.frontend.headers.SSLHost:                  resume.${DOMAINNAME}
+      traefik.docker.network:                            traefik
+      traefik.frontend.passHostHeader:                   true
+      traefik.frontend.headers.SSLForceHost:             true
+      traefik.frontend.headers.SSLRedirect:              true
+      traefik.frontend.headers.browserXSSFilter:         true
+      traefik.frontend.headers.contentTypeNosniff:       true
+      traefik.frontend.headers.forceSTSHeader:           true
+      traefik.frontend.headers.STSSeconds:               315360000
+      traefik.frontend.headers.STSIncludeSubdomains:     true
+      traefik.frontend.headers.STSPreload:               true
+      traefik.frontend.headers.customResponseHeaders:    X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
+      traefik.frontend.headers.frameDeny:                true
+      com.ouroboros.enable:                              "true"
 
 #######################################################################################
 #  DUCKDNS CONFIGURATION
