@@ -16,10 +16,9 @@ Duckdns is a free service which will point a DNS (sub domains of duckdns.org) to
 
 Heimdall is a way to organise all those links to your most used web sites and web applications in a simple way. Simplicity is the key to Heimdall. Why not use it as your browser start page? It even has the ability to include a search bar using either Google, Bing or DuckDuckGo.
 
-    Notes:
-    -   enter the full url path of the domain
-        in new tabs for a redirect.
-        (ie. https://app.example.com)
+###### Notes:
+
+> enter the full url path of the domain in new tabs for a redirect. (ie. `https://app.example.com`)
 
 ## jackett
 
@@ -28,6 +27,10 @@ Heimdall is a way to organise all those links to your most used web sites and we
 
 Jackett works as a proxy server: it translates queries from apps (Sonarr, SickRage, CouchPotato, Mylar, etc) into tracker-site-specific http queries, parses the html response, then sends results back to the requesting software. This allows for getting recent uploads (like RSS) and performing searches. Jackett is a single repository of maintained indexer scraping & translation logic - removing the burden from other apps.
 
+###### Notes:
+
+> RARBG and ThePirateBay are useful indexers. Make sure to pay close attention to the category codes relating to your particular download type.
+
 ## nextcloud
 
 [Docker Hub](https://hub.docker.com/r/linuxserver/nextcloud/) \|\|
@@ -35,6 +38,10 @@ Jackett works as a proxy server: it translates queries from apps (Sonarr, SickRa
 [Website](https://nextcloud.com)
 
  Nextcloud gives you access to all your files wherever you are. With Nextcloud you pick a server of your choice, at home, in a data center or at a provider. And that is where your files will be. Nextcloud runs on that server, protecting your data and giving you access from your desktop or mobile devices. Through Nextcloud you also access, sync and share your existing data on that FTP drive at the office, a Dropbox or a NAS you have at home.
+
+###### Notes:
+
+> On initial configuration, use the postgres database to build the backend of this application to improve performance.
 
 ## oauth
 
@@ -126,3 +133,9 @@ Traefik (pronounced traffic) is a modern HTTP reverse proxy and load balancer th
 [GitHub](https://github.com/haugene/docker-transmission-openvpn)
 
 This container contains OpenVPN and Transmission with a configuration where Transmission is running only when OpenVPN has an active tunnel. It bundles configuration files for many popular VPN providers to make the setup easier.
+
+###### Notes:
+
+> This container has a health check that pings google.com with data to verify a stable connnection. Traefik takes roughly 5 minutes to recognize this container as healthy before making it available.
+>
+> As a sanity check I like to use the torrent magnet IP tool at <https://ipleak.net> to verfiy a stable VPN connection.

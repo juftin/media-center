@@ -40,7 +40,7 @@ The Google Oauth 2.0 configuration can be found [`here`](https://www.smarthomebe
 
 ### DuckDNS
 
-A free DuckDNS dynamic DNS subdomain can be set up [`here`]("https://www.duckdns.org").
+A free DuckDNS dynamic DNS subdomain can be set up [`here`](https://www.duckdns.org).
 
 ### File Configuration
 
@@ -76,11 +76,8 @@ The full list of containers can be found at [`docs/docker_containers.md`](docs/d
 
 Networking information can be found at [`docs/docker_networking.md`](docs/docker_networking.md). For ease of use and interconnection between services, all docker containers have been pre-assigned an IP address.
 
-* * *
-
-* * *
-
+<br/>
 <br/>
 <br/>
 
-made with ❤️ by juftin
+###### Cool stuff happens in Denver, CO [<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Flag_of_Denver%2C_Colorado.svg/800px-Flag_of_Denver%2C_Colorado.svg.png" width="25" alt="Denver">](https://denver-devs.slack.com/)
