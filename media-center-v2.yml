@@ -1,0 +1,55 @@
+################################################################################
+# DOCKER COMPOSE - MEDIA-CENTER-V2 BY JUFTIN
+################################################################################
+
+version: "3.7"
+
+################################################################################
+# SERVICES CONFIGURATION
+################################################################################
+
+services:
+
+    traefik:
+        container_name: traefik
+        hostname:       traefik
+        image:          library/traefik:v2.3
+        domainname:     ${DOMAIN_NAME}
+        ports:
+            -   published: 80
+                target:    80
+            -   published: 443
+                target:    443
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ${DOCKER_DIRECTORY}/traefik/config:/etc/traefik
+            - ${DOCKER_DIRECTORY}/shared:/shared
+        networks:
+            traefik:
+                ipv4_address: ${TRAEFIK_SUBNET}.2
+        environment:
+            TRAEFIK_PROVIDERS_DOCKER_NETWORK: "${COMPOSE_PROJECT_NAME}${TRAEFIK_NETWORK_NAME}"
+        restart:        ${UNIVERSAL_RESTART_POLICY}
+        labels:
+            traefik.enable:                                         true
+            traefik.http.routers.traefik.rule:                      Host(`${TRAEFIK_SUB_DOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.traefik.entrypoints:               web
+            traefik.http.services.traefik.loadbalancer.server.port: 8080
+
+################################################################################
+# NETWORKING CONFIGURATION
+################################################################################
+
+networks:
+    traefik:
+        driver: bridge
+        ipam:
+            config:
+                -   subnet: ${TRAEFIK_SUBNET}.0/24
+            driver: default
+    internal:
+        driver: bridge
+        ipam:
+            config:
+                -   subnet: ${INTERNAL_SUBNET}.0/24
+            driver: default

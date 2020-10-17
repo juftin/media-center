@@ -1,0 +1,55 @@
+# TRAEFIK CONFIGURATION
+
+global:
+    checkNewVersion:    false
+    sendAnonymousUsage: false
+
+api:
+    insecure:  true
+    dashboard: true
+
+log:
+    level:  INFO # DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+    filePath: # SET FILEPATH AS NONE TO DIRECT OUTPUT TO STDOUT`
+    format: json
+
+entryPoints:
+    web:
+        address: :80
+    # # Temporarily Disable HTTPS Redirects
+    #        http:
+    #            redirections:
+    #                entrypoint:
+    #                    to:     websecure
+    #                    scheme: https
+    websecure:
+        address: :443
+        forwardedHeaders:
+            trustedIPs:
+                - 173.245.48.0/20
+                - 103.21.244.0/22
+                - 103.22.200.0/22
+                - 103.31.4.0/22
+                - 141.101.64.0/18
+                - 108.162.192.0/18
+                - 190.93.240.0/20
+                - 188.114.96.0/20
+                - 197.234.240.0/22
+                - 198.41.128.0/17
+                - 162.158.0.0/15
+                - 104.16.0.0/12
+                - 172.64.0.0/13
+                - 131.0.72.0/22
+    traefik:
+        address: :8080
+
+
+providers:
+    docker:
+        exposedByDefault: false
+        watch:            true
+        endpoint:         unix:///var/run/docker.sock
+        swarmMode:        false
+
+serversTransport:
+    insecureSkipVerify: true
