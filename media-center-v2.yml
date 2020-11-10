@@ -5,6 +5,18 @@
 version: "3.7"
 
 ################################################################################
+# NETWORKING CONFIGURATION
+################################################################################
+
+networks:
+    traefik:
+        driver: bridge
+    internal:
+        driver: bridge
+    socket_proxy:
+        driver: bridge
+
+################################################################################
 # SERVICES CONFIGURATION
 ################################################################################
 
@@ -107,8 +119,6 @@ services:
             traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: https
             traefik.http.routers.traefik-rtr.middlewares:                     chain-no-auth@file
 
-
-
     ####################################
     # SOCKET-PROXY (DOCKER.SOCK)
     ####################################
@@ -127,9 +137,9 @@ services:
         depends_on:
             - duckdns
 
-        ####################################
-        # OAUTH (GOOGLE OAUTH FOR ADMIN)
-        ####################################
+    ####################################
+    # OAUTH (GOOGLE OAUTH FOR ADMIN)
+    ####################################
 
     oauth:
         container_name: oauth
@@ -183,9 +193,60 @@ services:
             com.ouroboros.enable: "true"
         restart:        ${UNIVERSAL_RESTART_POLICY}
 
+    ####################################
+    # WATCHTOWER (CONTAINER IMAGE UPDATING)
+    ####################################
+
+    watchtower:
+        container_name: watchtower
+        image:          containrrr/watchtower:latest
+        restart:        unless-stopped
+        networks:
+            internal:     null
+            socket_proxy: null
+        depends_on:
+            - socket-proxy
+        environment:
+            TZ:                            $TZ
+            WATCHTOWER_CLEANUP:            "true"
+            WATCHTOWER_REMOVE_VOLUMES:     "true"
+            WATCHTOWER_INCLUDE_STOPPED:    "true"
+            WATCHTOWER_NO_STARTUP_MESSAGE: "false"
+            WATCHTOWER_SCHEDULE:           "0 30 12 * * *"
+            DOCKER_HOST:                   tcp://socket-proxy:2375
+
     ########################################################
     # FRONT-END APPLICATIONS
     ########################################################
+
+    ####################################
+    # HEIMDALL (LANDING PAGE)
+    ####################################
+
+    heimdall:
+        container_name: heimdall
+        image:          linuxserver/heimdall:latest
+        restart:        ${UNIVERSAL_RESTART_POLICY}
+        networks:
+            traefik: null
+        security_opt:
+            - no-new-privileges:true
+        volumes:
+            - ${DOCKER_DIRECTORY}/heimdall/config:/config
+        environment:
+            - PUID=$PUID
+            - PGID=$PGID
+            - TZ=$TZ
+        labels:
+            traefik.enable:                                                       true
+            traefik.http.routers.heimdall-rtr.rule:                               Host(`${DOMAIN_NAME}`) || Host(`www.${DOMAIN_NAME}`)
+            traefik.http.middlewares.heimdall-redirect.redirectregex.regex:       ^https?://${DOMAIN_NAME}/(.*)
+            traefik.http.middlewares.heimdall-redirect.redirectregex.replacement: https://www.${DOMAIN_NAME}/$${1}
+            traefik.http.middlewares.heimdall-redirect.redirectregex.permanent:   true
+            traefik.http.routers.heimdall-rtr.entrypoints:                        https
+            traefik.http.routers.heimdall-rtr.service:                            heimdall-svc
+            traefik.http.services.heimdall-svc.loadbalancer.server.port:          80
+            traefik.http.routers.heimdall-rtr.middlewares:                        chain-no-auth@file
 
     ####################################
     # OMBI (DOWNLOAD REQUESTS)
@@ -213,6 +274,7 @@ services:
             traefik.http.routers.ombi-rtr.entrypoints:               https
             traefik.http.routers.ombi-rtr.service:                   ombi-svc
             traefik.http.services.ombi-svc.loadbalancer.server.port: 3579
+            traefik.http.routers.ombi-rtr.middlewares:               chain-no-auth@file
 
     ####################################
     # PLEX (MOVIES AND TV SERVER)
@@ -296,6 +358,7 @@ services:
             traefik.http.routers.tautulli-rtr.entrypoints:               https
             traefik.http.routers.tautulli-rtr.service:                   tautulli-svc
             traefik.http.services.tautulli-svc.loadbalancer.server.port: 8181
+            traefik.http.routers.tautulli-rtr.middlewares:               chain-no-auth@file
 
     ####################################
     # SONARR (TV SHOW DOWNLOADS)
@@ -325,6 +388,7 @@ services:
             traefik.http.routers.sonarr-rtr.entrypoints:               https
             traefik.http.routers.sonarr-rtr.service:                   sonarr-svc
             traefik.http.services.sonarr-svc.loadbalancer.server.port: 8989
+            traefik.http.routers.sonarr-rtr.middlewares:               chain-no-auth@file
 
     ####################################
     # RADARR (MOVIE DOWNLOADS)
@@ -354,6 +418,7 @@ services:
             traefik.http.routers.radarr-rtr.entrypoints:               https
             traefik.http.routers.radarr-rtr.service:                   radarr-svc
             traefik.http.services.radarr-svc.loadbalancer.server.port: 7878
+            traefik.http.routers.radarr-rtr.middlewares:               chain-no-auth@file
 
     ####################################
     # TRANSMISSION (TORRENTING BEHIND VPN)
@@ -400,6 +465,7 @@ services:
             traefik.http.routers.transmission-rtr.entrypoints:               https
             traefik.http.routers.transmission-rtr.service:                   transmission-svc
             traefik.http.services.transmission-svc.loadbalancer.server.port: 9091
+            traefik.http.routers.transmission-rtr.middlewares:               chain-no-auth@file
 
     ####################################
     # JACKETT (TORRENTING INDEX SCRAPER)
@@ -428,27 +494,29 @@ services:
             traefik.http.routers.jackett-rtr.entrypoints:               https
             traefik.http.routers.jackett-rtr.service:                   jackett-svc
             traefik.http.services.jackett-svc.loadbalancer.server.port: 9117
+            traefik.http.routers.jackett-rtr.middlewares:               chain-no-auth@file
 
-################################################################################
-# NETWORKING CONFIGURATION
-################################################################################
+    ####################################
+    # RESUME (FILE STATIC HOSTING)
+    ####################################
 
-networks:
-    traefik:
-        driver: bridge
-        ipam:
-            config:
-                -   subnet: ${TRAEFIK_SUBNET}.0/24
-            driver: default
-    internal:
-        driver: bridge
-        ipam:
-            config:
-                -   subnet: ${INTERNAL_SUBNET}.0/24
-            driver: default
-    socket_proxy:
-        driver: bridge
-        ipam:
-            config:
-                -   subnet: ${SOCKET_SUBNET}.0/24
-            driver: default
+    resume:
+        container_name: resume
+        build:
+            context:    ${DOCKER_DIRECTORY}/resume/
+            dockerfile: Dockerfile
+        networks:
+            traefik: null
+        volumes:
+            - ${DOCKER_DIRECTORY}/resume/web/:/var/www/html/
+            - ${DOCKER_DIRECTORY}/resume/web/:/usr/share/nginx/html/
+        restart:        ${UNIVERSAL_RESTART_POLICY}
+        depends_on:
+            - traefik
+        labels:
+            traefik.enable:                                            true
+            traefik.http.routers.resume-rtr.rule:                      Host(`${RESUME_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.resume-rtr.entrypoints:               https
+            traefik.http.routers.resume-rtr.service:                   resume-svc
+            traefik.http.services.resume-svc.loadbalancer.server.port: 7856
+            traefik.http.routers.resume-rtr.middlewares:               chain-no-auth@file

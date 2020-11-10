@@ -16,6 +16,7 @@ venv.bak/
 .idea/*
 
 # MEDIA CENTER FILES
+traefik/logs/*
 plex/config/*
 tautulli/config/*
 sonarr/config/*
@@ -23,3 +24,4 @@ radarr/config/*
 ombi/config/*
 transmission/config/*
 jackett/config/*
+heimdall/config/*
