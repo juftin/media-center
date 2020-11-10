@@ -10,10 +10,18 @@ version: "3.7"
 
 services:
 
+    ########################################################
+    # ROUTING AND SERVING
+    ########################################################
+
+    ####################################
+    # TRAEFIK (REVERSE PROXY)
+    ####################################
+
     traefik:
         container_name: traefik
-        hostname:       traefik
         image:          library/traefik:v2.3
+        hostname:       ${TRAEFIK_SUBDOMAIN}
         domainname:     ${DOMAIN_NAME}
         ports:
             -   published: 80
@@ -21,20 +29,337 @@ services:
             -   published: 443
                 target:    443
         volumes:
-            - /var/run/docker.sock:/var/run/docker.sock:ro
             - ${DOCKER_DIRECTORY}/traefik/config:/etc/traefik
+            - ${DOCKER_DIRECTORY}/traefik/rules:/rules
             - ${DOCKER_DIRECTORY}/shared:/shared
+            - /var/run/docker.sock:/var/run/docker.sock:ro
         networks:
             traefik:
                 ipv4_address: ${TRAEFIK_SUBNET}.2
-        environment:
-            TRAEFIK_PROVIDERS_DOCKER_NETWORK: "${COMPOSE_PROJECT_NAME}${TRAEFIK_NETWORK_NAME}"
+            socket_proxy:
         restart:        ${UNIVERSAL_RESTART_POLICY}
+        depends_on:
+            - socket-proxy
+            - duckdns
         labels:
             traefik.enable:                                         true
-            traefik.http.routers.traefik.rule:                      Host(`${TRAEFIK_SUB_DOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.traefik.rule:                      Host(`${TRAEFIK_SUBDOMAIN}.${DOMAIN_NAME}`)
             traefik.http.routers.traefik.entrypoints:               web
             traefik.http.services.traefik.loadbalancer.server.port: 8080
+
+    ####################################
+    # SOCKET-PROXY (DOCKER.SOCK)
+    ####################################
+
+    socket-proxy:
+        container_name: socket-proxy
+        image:          tecnativa/docker-socket-proxy:latest
+        restart:        ${UNIVERSAL_RESTART_POLICY}
+        privileged:     true
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+        networks:
+            socket_proxy: null
+        env_file:
+            - ${DOCKER_DIRECTORY}/traefik_proxy/proxy_settings.env
+        depends_on:
+            - duckdns
+
+    ####################################
+    # OAUTH (GOOGLE OAUTH FOR ADMIN)
+    ####################################
+
+    #    oauth:
+    #        container_name: oauth
+    #        image:          thomseddon/traefik-forward-auth:latest
+    #        hostname:       oauth
+    #        environment:
+    #            PROVIDERS_GOOGLE_CLIENT_ID:     ${GOOGLE_CLIENT_ID}
+    #            PROVIDERS_GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+    #            SECRET:                         ${OAUTH_SECRET}
+    #            COOKIE_DOMAIN:                  ${DOMAIN_NAME}
+    #            INSECURE_COOKIE:                "false"
+    #            AUTH_HOST:                      oauth.${DOMAIN_NAME}
+    #            URL_PATH:                       /_oauth
+    #            WHITELIST:                      ${OAUTH_WHITELIST}
+    #            LOG_LEVEL:                      DEBUG
+    #            LIFETIME:                       2592000
+    #            DEFAULT_ACTION:                 auth
+    #            DEFAULT_PROVIDER:               google
+    #        networks:
+    #            traefik:  null
+    #            internal: null
+    #        restart:        ${UNIVERSAL_RESTART_POLICY}
+    #        depends_on:
+    #            - duckdns
+    #        labels:
+    #            traefik.enable:                                       true
+    #            traefik.http.routers.oauth.rule:                      Host(`oauth.${DOMAIN_NAME}`)
+    #            traefik.http.routers.oauth.entrypoints:               web
+    #            traefik.http.services.oauth.loadbalancer.server.port: 4181
+
+    ########################################################
+    # BACK-END APPLICATIONS
+    ########################################################
+
+    ####################################
+    # DUCKDNS (DYNAMIC DNS MONITORING)
+    ####################################
+
+    duckdns:
+        container_name: duckdns
+        image:          linuxserver/duckdns:latest
+        environment:
+            PUID:       ${PUID}
+            PGID:       ${PGID}
+            TZ:         ${TZ}
+            SUBDOMAINS: ${DUCKDNS_SUBDOMAIN}
+            TOKEN:      ${DUCKDNS_TOKEN}
+        networks:
+            internal: null
+        labels:
+            com.ouroboros.enable: "true"
+        restart:        ${UNIVERSAL_RESTART_POLICY}
+
+    ########################################################
+    # FRONT-END APPLICATIONS
+    ########################################################
+
+    ####################################
+    # OMBI (DOWNLOAD REQUESTS)
+    ####################################
+
+    ombi:
+        container_name: ombi
+        image:          linuxserver/ombi:latest
+        hostname:       ${OMBI_SUBDOMAIN}
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ:   ${TZ}
+        volumes:
+            - ${DOCKER_DIRECTORY}/ombi/config:/config
+            - ${DOCKER_DIRECTORY}/shared:/shared
+        networks:
+            traefik: null
+        restart:        ${UNIVERSAL_RESTART_POLICY}
+        depends_on:
+            - traefik
+        labels:
+            traefik.enable:                                      true
+            traefik.http.routers.ombi.rule:                      Host(`${OMBI_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.ombi.entrypoints:               web
+            traefik.http.services.ombi.loadbalancer.server.port: 3579
+
+    ####################################
+    # PLEX (MOVIES AND TV SERVER)
+    ####################################
+
+    plex:
+        container_name: plex
+        image:          linuxserver/plex:latest
+        networks:
+            internal: null
+        ports:
+            # Plex Media Server
+            -   published: ${PLEX_PORT}
+                target:    32400
+            # Plex DLNA Server
+            -   protocol:  udp
+                published: 1900
+                target:    1900
+            -   published: 32469
+                target:    32469
+            # Plex Home Theater via Plex Companion
+            -   published: 3005
+                target:    3005
+            # Bonjour/Avahi Network Discovery
+            -   protocol:  udp
+                published: 5354
+                target:    5353
+            # Plex for Roku via Plex Companion
+            -   published: 8324
+                target:    8324
+            # GDM Network Discovery
+            -   protocol:  udp
+                published: 32410
+                target:    32410
+            -   protocol:  udp
+                published: 32412
+                target:    32412
+            -   protocol:  udp
+                published: 32413
+                target:    32413
+            -   protocol:  udp
+                published: 32414
+                target:    32414
+        volumes:
+            - ${PLEX_CONFIG_DIR}:/config
+            - ${TV_DIR}:/tv
+            - ${MOVIE_DIR}:/movies
+            - ${PLEX_TRANSCODE_DIR}:/transcode
+            - ${DOCKER_DIRECTORY}/shared:/shared
+        environment:
+            TZ:      ${TZ}
+            PUID:    ${PUID}
+            PGID:    ${PGID}
+            VERSION: docker
+        restart:        ${UNIVERSAL_RESTART_POLICY}
+
+    ####################################
+    # TAUTULLI (PLEX SERVER MONITORING)
+    ####################################
+
+    tautulli:
+        container_name: tautulli
+        image:          linuxserver/tautulli:latest
+        hostname:       ${TAUTULLI_SUBDOMAIN}
+        volumes:
+            - ${DOCKER_DIRECTORY}/tautulli/config:/config
+            - ${DOCKER_DIRECTORY}/plex/config/Library/Application Support/Plex Media Server/Logs:/logs:ro
+            - ${DOCKER_DIRECTORY}/shared:/shared
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ:   ${TZ}
+        networks:
+            traefik: null
+        restart:        ${UNIVERSAL_RESTART_POLICY}
+        depends_on:
+            - traefik
+        labels:
+            traefik.enable:                                          true
+            traefik.http.routers.tautulli.rule:                      Host(`${TAUTULLI_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.tautulli.entrypoints:               web
+            traefik.http.services.tautulli.loadbalancer.server.port: 8181
+
+    ####################################
+    # SONARR (TV SHOW DOWNLOADS)
+    ####################################
+
+    sonarr:
+        image:          linuxserver/sonarr:latest
+        hostname:       ${SONARR_SUBDOMAIN}
+        container_name: sonarr
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ:   ${TZ}
+        volumes:
+            - ${DOCKER_DIRECTORY}/sonarr/config:/config
+            - ${COMPLETED_DOWNLOADS}:/downloads
+            - ${TV_DIR}:/tv
+            - ${DOCKER_DIRECTORY}/shared:/shared
+        networks:
+            traefik: null
+        depends_on:
+            - traefik
+        restart:        ${UNIVERSAL_RESTART_POLICY}
+        labels:
+            traefik.enable:                                        true
+            traefik.http.routers.sonarr.rule:                      Host(`${SONARR_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.sonarr.entrypoints:               web
+            traefik.http.services.sonarr.loadbalancer.server.port: 8989
+
+    ####################################
+    # RADARR (MOVIE DOWNLOADS)
+    ####################################
+
+    radarr:
+        image:          linuxserver/radarr:latest
+        hostname:       ${RADARR_SUBDOMAIN}
+        container_name: radarr
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ:   ${TZ}
+        volumes:
+            - ${DOCKER_DIRECTORY}/radarr/config:/config
+            - ${COMPLETED_DOWNLOADS}:/downloads
+            - ${MOVIE_DIR}:/movies
+            - ${DOCKER_DIRECTORY}/shared:/shared
+        networks:
+            traefik: null
+        depends_on:
+            - traefik
+        restart:        ${UNIVERSAL_RESTART_POLICY}
+        labels:
+            traefik.enable:                                        true
+            traefik.http.routers.radarr.rule:                      Host(`${RADARR_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.radarr.entrypoints:               web
+            traefik.http.services.radarr.loadbalancer.server.port: 7878
+
+    ####################################
+    # TRANSMISSION (TORRENTING BEHIND VPN)
+    ####################################
+
+    transmission:
+        container_name: transmission
+        hostname:       ${TRANSMISSION_SUBDOMAIN}
+        image:          haugene/transmission-openvpn:latest
+        environment:
+            PUID:                                    ${PUID}
+            PGID:                                    ${PGID}
+            OPENVPN_PROVIDER:                        ${OPENVPN_PROVIDER}
+            OPENVPN_USERNAME:                        ${OPENVPN_USERNAME}
+            OPENVPN_PASSWORD:                        ${OPENVPN_PASSWORD}
+            TRANSMISSION_IDLE_SEEDING_LIMIT:         0
+            TRANSMISSION_IDLE_SEEDING_LIMIT_ENABLED: "true"
+            TRANSMISSION_WEB_UI:                     combustion
+            TRANSMISSION_DOWNLOAD_DIR:               /downloads
+            LOCAL_NETWORK:                           ${PHYSICAL_SERVER_NETWORK}
+            TZ:                                      ${TZ}
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+            - ${DOCKER_DIRECTORY}/transmission/config:/data/transmission-home
+            - ${DOCKER_DIRECTORY}/transmission/watch:/data/watch
+            - ${COMPLETED_DOWNLOADS}:/downloads
+            - ${INCOMPLETE_DOWNLOADS}:/data/incomplete
+            - ${DOCKER_DIRECTORY}/shared:/shared
+        dns:
+            - 8.8.8.8
+            - 8.8.4.4
+        cap_add:
+            - NET_ADMIN
+        devices:
+            - /dev/net/tun
+        networks:
+            traefik: null
+        restart:        ${UNIVERSAL_RESTART_POLICY}
+        depends_on:
+            - traefik
+        labels:
+            traefik.enable:                                              true
+            traefik.http.routers.transmission.rule:                      Host(`${TRANSMISSION_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.transmission.entrypoints:               web
+            traefik.http.services.transmission.loadbalancer.server.port: 9091
+
+    ####################################
+    # JACKETT (TORRENTING INDEX SCRAPER)
+    ####################################
+
+    jackett:
+        container_name: jackett
+        image:          linuxserver/jackett:latest
+        hostname:       ${JACKETT_SUBDOMAIN}
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ:   ${TZ}
+        volumes:
+            - ${DOCKER_DIRECTORY}/jackett/config:/config
+            - ${COMPLETED_DOWNLOADS}:/downloads
+            - ${DOCKER_DIRECTORY}/shared:/shared
+        networks:
+            traefik: null
+        restart:        ${UNIVERSAL_RESTART_POLICY}
+        depends_on:
+            - traefik
+        labels:
+            traefik.enable:                                         true
+            traefik.http.routers.jackett.rule:                      Host(`${JACKETT_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.jackett.entrypoints:               web
+            traefik.http.services.jackett.loadbalancer.server.port: 9117
 
 ################################################################################
 # NETWORKING CONFIGURATION
@@ -52,4 +377,10 @@ networks:
         ipam:
             config:
                 -   subnet: ${INTERNAL_SUBNET}.0/24
+            driver: default
+    socket_proxy:
+        driver: bridge
+        ipam:
+            config:
+                -   subnet: ${SOCKET_SUBNET}.0/24
             driver: default

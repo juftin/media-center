@@ -48,8 +48,11 @@ providers:
     docker:
         exposedByDefault: false
         watch:            true
-        endpoint:         unix:///var/run/docker.sock
         swarmMode:        false
+        endpoint:         tcp://socket-proxy:2375
+        # endpoint:         unix:///var/run/docker.sock
+    file:
+        directory: /rules
 
 serversTransport:
     insecureSkipVerify: true
