@@ -1,0 +1,27 @@
+http:
+
+    middlewares:
+
+        ####################################
+        # CHAINS
+        ####################################
+
+        chain-no-auth:
+            chain:
+                middlewares:
+                    - middlewares-rate-limit
+                    - middlewares-secure-headers
+
+        chain-basic-auth:
+            chain:
+                middlewares:
+                    - middlewares-rate-limit
+                    - middlewares-secure-headers
+                    - middlewares-basic-auth
+
+        chain-oauth-google:
+            chain:
+                middlewares:
+                    - middlewares-rate-limit
+                    - middlewares-secure-headers
+                    - middlewares-oauth

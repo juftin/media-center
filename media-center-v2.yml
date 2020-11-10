@@ -50,18 +50,64 @@ services:
             - socket-proxy
             - duckdns
             - oauth
+        command:
+            # GLOBAL SETTINGS
+            - --global.checkNewVersion=true
+            - --global.sendAnonymousUsage=false
+            # API SETTINGS
+            - --api=true
+            - --api.insecure=true
+            - --api.dashboard=true
+            # LOGGING SETTINGS
+            - --log=true
+            - --log.level=DEBUG # DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+            - --log.format=COMMON
+            - --log.filePath=/logs/traefik.log
+            - --accessLog=true
+            - --accessLog.filePath=/logs/access.log
+            - --accessLog.format=JSON
+            - --accessLog.bufferingSize=100
+            - --accessLog.filters.statusCodes=400-499
+            - --accessLog.filters.retryAttempts=true
+            - --accessLog.filters.minDuration=10ms
+            # PROVIDERS
+            - --providers.docker=true
+            - --providers.docker.endpoint=tcp://socket-proxy:2375
+            - --providers.docker.exposedByDefault=false
+            - --providers.docker.network=socket_proxy
+            - --providers.docker.swarmMode=false
+            - --providers.file.directory=/rules
+            - --providers.file.watch=true
+            # ENTRYPOINTS
+            - --entryPoints.http.address=:80
+            - --entryPoints.https.address=:443
+            - --entryPoints.traefik.address=:8080
+            - --entrypoints.https.forwardedHeaders.trustedIPs=173.245.48.0/20,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,141.101.64.0/18,108.162.192.0/18,190.93.240.0/20,188.114.96.0/20,197.234.240.0/22,198.41.128.0/17,162.158.0.0/15,104.16.0.0/12,172.64.0.0/13,131.0.72.0/22
+            - --entrypoints.https.http.tls.certresolver=dns-cloudflare
+            - --entrypoints.https.http.tls.domains[0].main=${DOMAIN_NAME}
+            - --entrypoints.https.http.tls.domains[0].sans=*.${DOMAIN_NAME}
+            # - --entrypoints.https.http.tls.options=tls-opts@file
+            # CERTIFICATE RESOLVERS
+            - --certificatesResolvers.dns-cloudflare.acme.email=${CLOUDFLARE_EMAIL}
+            - --certificatesResolvers.dns-cloudflare.acme.storage=/acme.json
+            - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.provider=cloudflare
+            - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.resolvers=1.1.1.1:53,1.0.0.1:53
+            - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.delayBeforeCheck=90
+            # TESTING SETTINGS (COMMENTED OUT BY DEFAULT)
+            - --certificatesResolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory
+            - --serversTransport.insecureSkipVerify=true
         labels:
             traefik.enable:                                                   true
             traefik.http.routers.traefik-rtr.rule:                            Host(`${TRAEFIK_SUBDOMAIN}.${DOMAIN_NAME}`)
-            traefik.http.routers.traefik-rtr.entrypoints:                     websecure
-            traefik.http.services.traefik-svc.loadbalancer.server.port:       8080
-            traefik.entrypoints.websecure.http.tls.domains[0].main:           ${DOMAIN_NAME}
-            traefik.entrypoints.websecure.http.tls.domains[0].sans:           "*.${DOMAIN_NAME}"
-            traefik.entrypoints.websecure.http.tls.options:                   tls-opts@file
-            traefik.http.routers.http-catchall.entrypoints:                   web
+            traefik.http.routers.traefik-rtr.entrypoints:                     https
+            traefik.http.routers.traefik-rtr.service:                         api@internal
+            traefik.http.routers.http-catchall.entrypoints:                   http
             traefik.http.routers.http-catchall.rule:                          HostRegexp(`{host:.+}`)
             traefik.http.routers.http-catchall.middlewares:                   redirect-to-https
             traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: https
+            traefik.http.routers.traefik-rtr.middlewares:                     chain-no-auth@file
+
+
 
     ####################################
     # SOCKET-PROXY (DOCKER.SOCK)
@@ -111,7 +157,7 @@ services:
         labels:
             traefik.enable:                                       true
             traefik.http.routers.oauth.rule:                      Host(`oauth.${DOMAIN_NAME}`)
-            traefik.http.routers.oauth.entrypoints:               websecure
+            traefik.http.routers.oauth.entrypoints:               https
             traefik.http.services.oauth.loadbalancer.server.port: 4181
 
     ########################################################
@@ -164,7 +210,7 @@ services:
         labels:
             traefik.enable:                                          true
             traefik.http.routers.ombi-rtr.rule:                      Host(`${OMBI_SUBDOMAIN}.${DOMAIN_NAME}`)
-            traefik.http.routers.ombi-rtr.entrypoints:               websecure
+            traefik.http.routers.ombi-rtr.entrypoints:               https
             traefik.http.routers.ombi-rtr.service:                   ombi-svc
             traefik.http.services.ombi-svc.loadbalancer.server.port: 3579
 
@@ -247,7 +293,7 @@ services:
         labels:
             traefik.enable:                                              true
             traefik.http.routers.tautulli-rtr.rule:                      Host(`${TAUTULLI_SUBDOMAIN}.${DOMAIN_NAME}`)
-            traefik.http.routers.tautulli-rtr.entrypoints:               websecure
+            traefik.http.routers.tautulli-rtr.entrypoints:               https
             traefik.http.routers.tautulli-rtr.service:                   tautulli-svc
             traefik.http.services.tautulli-svc.loadbalancer.server.port: 8181
 
@@ -276,7 +322,7 @@ services:
         labels:
             traefik.enable:                                            true
             traefik.http.routers.sonarr-rtr.rule:                      Host(`${SONARR_SUBDOMAIN}.${DOMAIN_NAME}`)
-            traefik.http.routers.sonarr-rtr.entrypoints:               websecure
+            traefik.http.routers.sonarr-rtr.entrypoints:               https
             traefik.http.routers.sonarr-rtr.service:                   sonarr-svc
             traefik.http.services.sonarr-svc.loadbalancer.server.port: 8989
 
@@ -305,7 +351,7 @@ services:
         labels:
             traefik.enable:                                            true
             traefik.http.routers.radarr-rtr.rule:                      Host(`${RADARR_SUBDOMAIN}.${DOMAIN_NAME}`)
-            traefik.http.routers.radarr-rtr.entrypoints:               websecure
+            traefik.http.routers.radarr-rtr.entrypoints:               https
             traefik.http.routers.radarr-rtr.service:                   radarr-svc
             traefik.http.services.radarr-svc.loadbalancer.server.port: 7878
 
@@ -351,7 +397,7 @@ services:
         labels:
             traefik.enable:                                                  true
             traefik.http.routers.transmission-rtr.rule:                      Host(`${TRANSMISSION_SUBDOMAIN}.${DOMAIN_NAME}`)
-            traefik.http.routers.transmission-rtr.entrypoints:               websecure
+            traefik.http.routers.transmission-rtr.entrypoints:               https
             traefik.http.routers.transmission-rtr.service:                   transmission-svc
             traefik.http.services.transmission-svc.loadbalancer.server.port: 9091
 
@@ -379,7 +425,7 @@ services:
         labels:
             traefik.enable:                                             true
             traefik.http.routers.jackett-rtr.rule:                      Host(`${JACKETT_SUBDOMAIN}.${DOMAIN_NAME}`)
-            traefik.http.routers.jackett-rtr.entrypoints:               websecure
+            traefik.http.routers.jackett-rtr.entrypoints:               https
             traefik.http.routers.jackett-rtr.service:                   jackett-svc
             traefik.http.services.jackett-svc.loadbalancer.server.port: 9117
 
