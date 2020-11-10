@@ -55,7 +55,6 @@ services:
             traefik.http.routers.traefik-rtr.rule:                            Host(`${TRAEFIK_SUBDOMAIN}.${DOMAIN_NAME}`)
             traefik.http.routers.traefik-rtr.entrypoints:                     websecure
             traefik.http.services.traefik-svc.loadbalancer.server.port:       8080
-            traefik.certificatesResolvers.dns-cloudflare.acme.email:          ${CLOUDFLARE_EMAIL}
             traefik.entrypoints.websecure.http.tls.domains[0].main:           ${DOMAIN_NAME}
             traefik.entrypoints.websecure.http.tls.domains[0].sans:           "*.${DOMAIN_NAME}"
             traefik.entrypoints.websecure.http.tls.options:                   tls-opts@file

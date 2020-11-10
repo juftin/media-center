@@ -70,6 +70,7 @@ serversTransport:
 certificatesResolvers:
     dns-cloudflare:
         acme:
+            email:    juftin@juftin.com
             storage:  /acme.json
             dnsChallenge:
                 provider:         cloudflare
