@@ -26,26 +26,43 @@ services:
         ports:
             -   published: 80
                 target:    80
+                protocol:  tcp
+                mode:      host
             -   published: 443
                 target:    443
+                protocol:  tcp
+                mode:      host
+        environment:
+            CF_API_EMAIL: ${CLOUDFLARE_EMAIL}
+            CF_API_KEY:   ${CLOUDFLARE_API_KEY}
         volumes:
             - ${DOCKER_DIRECTORY}/traefik/config:/etc/traefik
             - ${DOCKER_DIRECTORY}/traefik/rules:/rules
+            - ${DOCKER_DIRECTORY}/traefik/logs:/logs
             - ${DOCKER_DIRECTORY}/shared:/shared
             - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ${DOCKER_DIRECTORY}/traefik/acme/acme.json:/acme.json
         networks:
-            traefik:
-                ipv4_address: ${TRAEFIK_SUBNET}.2
-            socket_proxy:
+            traefik:      null
+            socket_proxy: null
         restart:        ${UNIVERSAL_RESTART_POLICY}
         depends_on:
             - socket-proxy
             - duckdns
+            - oauth
         labels:
-            traefik.enable:                                         true
-            traefik.http.routers.traefik.rule:                      Host(`${TRAEFIK_SUBDOMAIN}.${DOMAIN_NAME}`)
-            traefik.http.routers.traefik.entrypoints:               web
-            traefik.http.services.traefik.loadbalancer.server.port: 8080
+            traefik.enable:                                                   true
+            traefik.http.routers.traefik-rtr.rule:                            Host(`${TRAEFIK_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.traefik-rtr.entrypoints:                     websecure
+            traefik.http.services.traefik.loadbalancer.server.port:           8080
+            traefik.http.routers.traefik-rtr.middlewares:                     chain-oauth-google@file
+            traefik.certificatesResolvers.dns-cloudflare.acme.email:          ${CLOUDFLARE_EMAIL}
+            traefik.entryPoints.websecure.http.tls.main:                      ${DOMAIN_NAME}
+            traefik.entryPoints.websecure.http.tls.sans:                      "[*.${DOMAIN_NAME}]"
+            traefik.http.routers.http-catchall.entrypoints:                   web
+            traefik.http.routers.http-catchall.rule:                          HostRegexp(`{host:.+}`)
+            traefik.http.routers.http-catchall.middlewares:                   redirect-to-https
+            traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: https
 
     ####################################
     # SOCKET-PROXY (DOCKER.SOCK)
@@ -65,38 +82,38 @@ services:
         depends_on:
             - duckdns
 
-    ####################################
-    # OAUTH (GOOGLE OAUTH FOR ADMIN)
-    ####################################
+        ####################################
+        # OAUTH (GOOGLE OAUTH FOR ADMIN)
+        ####################################
 
-    #    oauth:
-    #        container_name: oauth
-    #        image:          thomseddon/traefik-forward-auth:latest
-    #        hostname:       oauth
-    #        environment:
-    #            PROVIDERS_GOOGLE_CLIENT_ID:     ${GOOGLE_CLIENT_ID}
-    #            PROVIDERS_GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
-    #            SECRET:                         ${OAUTH_SECRET}
-    #            COOKIE_DOMAIN:                  ${DOMAIN_NAME}
-    #            INSECURE_COOKIE:                "false"
-    #            AUTH_HOST:                      oauth.${DOMAIN_NAME}
-    #            URL_PATH:                       /_oauth
-    #            WHITELIST:                      ${OAUTH_WHITELIST}
-    #            LOG_LEVEL:                      DEBUG
-    #            LIFETIME:                       2592000
-    #            DEFAULT_ACTION:                 auth
-    #            DEFAULT_PROVIDER:               google
-    #        networks:
-    #            traefik:  null
-    #            internal: null
-    #        restart:        ${UNIVERSAL_RESTART_POLICY}
-    #        depends_on:
-    #            - duckdns
-    #        labels:
-    #            traefik.enable:                                       true
-    #            traefik.http.routers.oauth.rule:                      Host(`oauth.${DOMAIN_NAME}`)
-    #            traefik.http.routers.oauth.entrypoints:               web
-    #            traefik.http.services.oauth.loadbalancer.server.port: 4181
+    oauth:
+        container_name: oauth
+        image:          thomseddon/traefik-forward-auth:latest
+        hostname:       oauth
+        environment:
+            PROVIDERS_GOOGLE_CLIENT_ID:     ${GOOGLE_CLIENT_ID}
+            PROVIDERS_GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+            SECRET:                         ${OAUTH_SECRET}
+            COOKIE_DOMAIN:                  ${DOMAIN_NAME}
+            INSECURE_COOKIE:                "false"
+            AUTH_HOST:                      oauth.${DOMAIN_NAME}
+            URL_PATH:                       /_oauth
+            WHITELIST:                      ${OAUTH_WHITELIST}
+            LOG_LEVEL:                      DEBUG
+            LIFETIME:                       2592000
+            DEFAULT_ACTION:                 auth
+            DEFAULT_PROVIDER:               google
+        networks:
+            traefik:  null
+            internal: null
+        restart:        ${UNIVERSAL_RESTART_POLICY}
+        depends_on:
+            - duckdns
+        labels:
+            traefik.enable:                                       true
+            traefik.http.routers.oauth.rule:                      Host(`oauth.${DOMAIN_NAME}`)
+            traefik.http.routers.oauth.entrypoints:               websecure
+            traefik.http.services.oauth.loadbalancer.server.port: 4181
 
     ########################################################
     # BACK-END APPLICATIONS
@@ -146,10 +163,11 @@ services:
         depends_on:
             - traefik
         labels:
-            traefik.enable:                                      true
-            traefik.http.routers.ombi.rule:                      Host(`${OMBI_SUBDOMAIN}.${DOMAIN_NAME}`)
-            traefik.http.routers.ombi.entrypoints:               web
-            traefik.http.services.ombi.loadbalancer.server.port: 3579
+            traefik.enable:                                          true
+            traefik.http.routers.ombi-rtr.rule:                      Host(`${OMBI_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.ombi-rtr.entrypoints:               websecure
+            traefik.http.routers.ombi-rtr.service:                   ombi-svc
+            traefik.http.services.ombi-svc.loadbalancer.server.port: 3579
 
     ####################################
     # PLEX (MOVIES AND TV SERVER)
@@ -228,10 +246,11 @@ services:
         depends_on:
             - traefik
         labels:
-            traefik.enable:                                          true
-            traefik.http.routers.tautulli.rule:                      Host(`${TAUTULLI_SUBDOMAIN}.${DOMAIN_NAME}`)
-            traefik.http.routers.tautulli.entrypoints:               web
-            traefik.http.services.tautulli.loadbalancer.server.port: 8181
+            traefik.enable:                                              true
+            traefik.http.routers.tautulli-rtr.rule:                      Host(`${TAUTULLI_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.tautulli-rtr.entrypoints:               websecure
+            traefik.http.routers.tautulli-rtr.service:                   tautulli-svc
+            traefik.http.services.tautulli-svc.loadbalancer.server.port: 8181
 
     ####################################
     # SONARR (TV SHOW DOWNLOADS)
@@ -256,10 +275,11 @@ services:
             - traefik
         restart:        ${UNIVERSAL_RESTART_POLICY}
         labels:
-            traefik.enable:                                        true
-            traefik.http.routers.sonarr.rule:                      Host(`${SONARR_SUBDOMAIN}.${DOMAIN_NAME}`)
-            traefik.http.routers.sonarr.entrypoints:               web
-            traefik.http.services.sonarr.loadbalancer.server.port: 8989
+            traefik.enable:                                            true
+            traefik.http.routers.sonarr-rtr.rule:                      Host(`${SONARR_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.sonarr-rtr.entrypoints:               websecure
+            traefik.http.routers.sonarr-rtr.service:                   sonarr-svc
+            traefik.http.services.sonarr-svc.loadbalancer.server.port: 8989
 
     ####################################
     # RADARR (MOVIE DOWNLOADS)
@@ -284,10 +304,11 @@ services:
             - traefik
         restart:        ${UNIVERSAL_RESTART_POLICY}
         labels:
-            traefik.enable:                                        true
-            traefik.http.routers.radarr.rule:                      Host(`${RADARR_SUBDOMAIN}.${DOMAIN_NAME}`)
-            traefik.http.routers.radarr.entrypoints:               web
-            traefik.http.services.radarr.loadbalancer.server.port: 7878
+            traefik.enable:                                            true
+            traefik.http.routers.radarr-rtr.rule:                      Host(`${RADARR_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.radarr-rtr.entrypoints:               websecure
+            traefik.http.routers.radarr-rtr.service:                   radarr-svc
+            traefik.http.services.radarr-svc.loadbalancer.server.port: 7878
 
     ####################################
     # TRANSMISSION (TORRENTING BEHIND VPN)
@@ -329,10 +350,11 @@ services:
         depends_on:
             - traefik
         labels:
-            traefik.enable:                                              true
-            traefik.http.routers.transmission.rule:                      Host(`${TRANSMISSION_SUBDOMAIN}.${DOMAIN_NAME}`)
-            traefik.http.routers.transmission.entrypoints:               web
-            traefik.http.services.transmission.loadbalancer.server.port: 9091
+            traefik.enable:                                                  true
+            traefik.http.routers.transmission-rtr.rule:                      Host(`${TRANSMISSION_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.transmission-rtr.entrypoints:               websecure
+            traefik.http.routers.transmission-rtr.service:                   transmission-svc
+            traefik.http.services.transmission-svc.loadbalancer.server.port: 9091
 
     ####################################
     # JACKETT (TORRENTING INDEX SCRAPER)
@@ -356,10 +378,11 @@ services:
         depends_on:
             - traefik
         labels:
-            traefik.enable:                                         true
-            traefik.http.routers.jackett.rule:                      Host(`${JACKETT_SUBDOMAIN}.${DOMAIN_NAME}`)
-            traefik.http.routers.jackett.entrypoints:               web
-            traefik.http.services.jackett.loadbalancer.server.port: 9117
+            traefik.enable:                                             true
+            traefik.http.routers.jackett-rtr.rule:                      Host(`${JACKETT_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.jackett-rtr.entrypoints:               websecure
+            traefik.http.routers.jackett-rtr.service:                   jackett-svc
+            traefik.http.services.jackett-svc.loadbalancer.server.port: 9117
 
 ################################################################################
 # NETWORKING CONFIGURATION
