@@ -54,11 +54,11 @@ services:
             traefik.enable:                                                   true
             traefik.http.routers.traefik-rtr.rule:                            Host(`${TRAEFIK_SUBDOMAIN}.${DOMAIN_NAME}`)
             traefik.http.routers.traefik-rtr.entrypoints:                     websecure
-            traefik.http.services.traefik.loadbalancer.server.port:           8080
-            traefik.http.routers.traefik-rtr.middlewares:                     chain-oauth-google@file
+            traefik.http.services.traefik-svc.loadbalancer.server.port:       8080
             traefik.certificatesResolvers.dns-cloudflare.acme.email:          ${CLOUDFLARE_EMAIL}
-            traefik.entryPoints.websecure.http.tls.main:                      ${DOMAIN_NAME}
-            traefik.entryPoints.websecure.http.tls.sans:                      "[*.${DOMAIN_NAME}]"
+            traefik.entrypoints.websecure.http.tls.domains[0].main:           ${DOMAIN_NAME}
+            traefik.entrypoints.websecure.http.tls.domains[0].sans:           "*.${DOMAIN_NAME}"
+            traefik.entrypoints.websecure.http.tls.options:                   tls-opts@file
             traefik.http.routers.http-catchall.entrypoints:                   web
             traefik.http.routers.http-catchall.rule:                          HostRegexp(`{host:.+}`)
             traefik.http.routers.http-catchall.middlewares:                   redirect-to-https

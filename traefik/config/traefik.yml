@@ -1,5 +1,3 @@
-# TRAEFIK CONFIGURATION
-
 global:
     checkNewVersion:    false
     sendAnonymousUsage: false
@@ -35,7 +33,6 @@ entryPoints:
         http:
             tls:
                 certResolver: dns-cloudflare
-                options:      tls-opts@file
         address: :443
         forwardedHeaders:
             trustedIPs:
@@ -56,7 +53,6 @@ entryPoints:
     traefik:
         address: :8080
 
-
 providers:
     docker:
         exposedByDefault: false
@@ -69,6 +65,7 @@ providers:
 
 serversTransport:
     insecureSkipVerify: true
+
 
 certificatesResolvers:
     dns-cloudflare:
