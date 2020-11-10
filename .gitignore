@@ -12,4 +12,14 @@ ENV/
 env.bak/
 venv.bak/
 
+# IDE FILES
+.idea/*
+
 # MEDIA CENTER FILES
+plex/config/*
+tautulli/config/*
+sonarr/config/*
+radarr/config/*
+ombi/config/*
+transmission/config/*
+jackett/config/*
