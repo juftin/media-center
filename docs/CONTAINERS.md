@@ -26,7 +26,7 @@ web applications in a simple way. Simplicity is the key to Heimdall.
 Why not use it as your browser start page? It even has the ability to 
 include a search bar using either Google, Bing or DuckDuckGo.
 
-<img src="static/heimdall.png" width="500" alt="Heimdall">
+<img src="static/heimdall.png" width="700" alt="Heimdall">
 
 ###### Notes:
 
@@ -134,6 +134,8 @@ It can monitor multiple RSS feeds for new episodes of your
 favorite shows and will grab, sort and rename them. It can also be 
 configured to automatically upgrade the quality of files already 
 downloaded when a better quality format becomes available.
+
+<img src="static/sonarr_download_client_config.png" width="700" alt="sonarr_download_client_config">
 
 ## tautulli
 
