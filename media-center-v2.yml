@@ -238,15 +238,12 @@ services:
             - PGID=$PGID
             - TZ=$TZ
         labels:
-            traefik.enable:                                                       true
-            traefik.http.routers.heimdall-rtr.rule:                               Host(`${DOMAIN_NAME}`) || Host(`www.${DOMAIN_NAME}`)
-            traefik.http.routers.heimdall-rtr.entrypoints:                        https
-            traefik.http.routers.heimdall-rtr.service:                            heimdall-svc
-            traefik.http.services.heimdall-svc.loadbalancer.server.port:          443
-            traefik.http.routers.heimdall-rtr.middlewares:                        heimdall-redirect@docker,chain-oauth-google@file
-            traefik.http.middlewares.heimdall-redirect.redirectregex.regex:       ^https?://${DOMAIN_NAME}/(.*)
-            traefik.http.middlewares.heimdall-redirect.redirectregex.replacement: https://www.${DOMAIN_NAME}/$${1}
-            traefik.http.middlewares.heimdall-redirect.redirectregex.permanent:   true
+            traefik.enable:                                              true
+            traefik.http.routers.heimdall-rtr.rule:                      Host(`${DOMAIN_NAME}`)
+            traefik.http.routers.heimdall-rtr.entrypoints:               https
+            traefik.http.routers.heimdall-rtr.service:                   heimdall-svc
+            traefik.http.services.heimdall-svc.loadbalancer.server.port: 80
+            traefik.http.routers.heimdall-rtr.middlewares:               chain-oauth-google@file
 
     ####################################
     # OMBI (DOWNLOAD REQUESTS)
