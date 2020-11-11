@@ -98,7 +98,7 @@ services:
             - --entrypoints.https.http.tls.certresolver=dns-cloudflare
             - --entrypoints.https.http.tls.domains[0].main=${DOMAIN_NAME}
             - --entrypoints.https.http.tls.domains[0].sans=*.${DOMAIN_NAME}
-            # - --entrypoints.https.http.tls.options=tls-opts@file
+            - --entrypoints.https.http.tls.options=tls-opts@file
             # CERTIFICATE RESOLVERS
             - --certificatesResolvers.dns-cloudflare.acme.email=${CLOUDFLARE_EMAIL}
             - --certificatesResolvers.dns-cloudflare.acme.storage=/acme.json
