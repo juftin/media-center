@@ -132,6 +132,8 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock:ro
         networks:
             docker_socket_proxy: null
+        ports:
+            - "127.0.0.1:2375:2375"
         env_file:
             - ${DOCKER_DIRECTORY}/traefik_proxy/proxy_settings.env
         depends_on:
@@ -159,8 +161,7 @@ services:
             DEFAULT_ACTION:                 auth
             DEFAULT_PROVIDER:               google
         networks:
-            traefik:  null
-            internal: null
+            traefik: null
         restart:        ${UNIVERSAL_RESTART_POLICY}
         depends_on:
             - duckdns
