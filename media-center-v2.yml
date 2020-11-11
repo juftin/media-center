@@ -107,7 +107,6 @@ services:
             - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.delayBeforeCheck=90
             # TESTING SETTINGS (COMMENTED OUT BY DEFAULT)
             - --certificatesResolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory
-            # - --serversTransport.insecureSkipVerify=true
         labels:
             traefik.enable:                                                   true
             traefik.http.routers.traefik-rtr.rule:                            Host(`${TRAEFIK_SUBDOMAIN}.${DOMAIN_NAME}`)
@@ -243,7 +242,7 @@ services:
             traefik.http.routers.heimdall-rtr.rule:                               Host(`${DOMAIN_NAME}`) || Host(`www.${DOMAIN_NAME}`)
             traefik.http.routers.heimdall-rtr.entrypoints:                        https
             traefik.http.routers.heimdall-rtr.service:                            heimdall-svc
-            traefik.http.services.heimdall-svc.loadbalancer.server.port:          80
+            traefik.http.services.heimdall-svc.loadbalancer.server.port:          443
             traefik.http.routers.heimdall-rtr.middlewares:                        heimdall-redirect@docker,chain-oauth-google@file
             traefik.http.middlewares.heimdall-redirect.redirectregex.regex:       ^https?://${DOMAIN_NAME}/(.*)
             traefik.http.middlewares.heimdall-redirect.redirectregex.replacement: https://www.${DOMAIN_NAME}/$${1}
@@ -549,4 +548,4 @@ services:
             traefik.http.routers.resume-rtr.entrypoints:               https
             traefik.http.routers.resume-rtr.service:                   resume-svc
             traefik.http.services.resume-svc.loadbalancer.server.port: 7856
-            traefik.http.routers.resume-rtr.middlewares:               chain-oauth-google@file
+            traefik.http.routers.resume-rtr.middlewares:               chain-no-auth@file
