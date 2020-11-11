@@ -26,7 +26,7 @@ web applications in a simple way. Simplicity is the key to Heimdall.
 Why not use it as your browser start page? It even has the ability to 
 include a search bar using either Google, Bing or DuckDuckGo.
 
-<img src="static/heimdall.png" width="700" alt="Heimdall">
+<img src="static/heimdall.png" width="600" alt="Heimdall">
 
 ###### Notes:
 
@@ -48,11 +48,59 @@ require reactivation or forum posts to maintain its existence.
 [Docker Hub](https://hub.docker.com/r/linuxserver/jackett/) \|\|
 [GitHub](https://github.com/linuxserver/docker-jackett)
 
-Jackett works as a proxy server: it translates queries from apps (Sonarr, SickRage, CouchPotato, Mylar, etc) into tracker-site-specific http queries, parses the html response, then sends results back to the requesting software. This allows for getting recent uploads (like RSS) and performing searches. Jackett is a single repository of maintained indexer scraping & translation logic - removing the burden from other apps.
+Jackett works as a proxy server: it translates queries from apps 
+(Sonarr, SickRage, CouchPotato, Mylar, etc) into tracker-site-specific 
+http queries, parses the html response, then sends results back to the 
+requesting software. This allows for getting recent uploads (like RSS) 
+and performing searches. Jackett is a single repository of maintained 
+indexer scraping & translation logic - removing the burden from other apps.
 
+#### Configuration:
+
+Jackett's configuration is fairly simple. The API Key is fisplayed in the 
+top right of the page. To track a new indexer, click `+Add Indexer` and search for 
+it by name. These entries will be added as TORZNAB feeds on applications like
+Sonarr and Radarr.
+
+<img src="static/jackett_add_indexer.png" width="500" alt="jackett_add_indexer">
+
+#### Recommended Indexers:
+
+- TV
+    - The Pirate Bay
+        - Endpoint: http://jackett:9117/api/v2.0/indexers/thepiratebay/results/torznab/
+        - Categories: 5000,5040,5050,100208,100205
+    - 1337x
+        - Endpoint: http://jackett:9117/api/v2.0/indexers/1337x/results/torznab/
+        - Categories: 5000,5030,5040,5070,5080,100074,100006,100009,100004,100041,100071,100075,100007
+    - RARBG
+        - Endpoint: http://jackett:9117/api/v2.0/indexers/thepiratebay/results/torznab/
+        - Categories: 5030,5030,5040,5045,100018,100041,100049
+    - kickasstorrents
+        - Endpoint: http://jackett:9117/api/v2.0/indexers/thepiratebay/results/torznab/
+        - Categories: 5000,5070,5080,103583               
+
+- Movies
+    - The Pirate Bay
+        - Endpoint: http://jackett:9117/api/v2.0/indexers/thepiratebay/results/torznab/
+        - Categories: 2000,2020,2040,2060,100207,100505,100201,100202,100501,100502
+    - 1337x
+        - Endpoint: http://jackett:9117/api/v2.0/indexers/1337x/results/torznab/
+        - Categories: 2000,2010,2030,2040,2045,2060,2070,100066,100073,100002,100004,100001,100054,100042,100070,100055,100003,100076
+    - RARBG
+        - Endpoint: http://jackett:9117/api/v2.0/indexers/thepiratebay/results/torznab/
+        - Categories: 2000,2030,2040,2045,2050,2060,100046,100042,100049,100017,100044,100047,100050,100045,100054,100051,100014,100048,100052
+    - kickasstorrents
+        - Endpoint: http://jackett:9117/api/v2.0/indexers/thepiratebay/results/torznab/
+        - Categories: 2000,112696,105134  
+    
 ###### Notes:
 
-> RARBG and ThePirateBay are useful indexers. Make sure to pay close attention to the category codes relating to your particular download type.
+> Jackett's default endpoint will be populated with your custom domain, it can be contacted
+>internally at http://jackett:9117
+>
+>RARBG and ThePirateBay are useful indexers. Make sure to pay 
+> close attention to the category codes relating to your particular download type.
 
 ## oauth
 
@@ -135,7 +183,7 @@ favorite shows and will grab, sort and rename them. It can also be
 configured to automatically upgrade the quality of files already 
 downloaded when a better quality format becomes available.
 
-<img src="static/sonarr_download_client_config.png" width="700" alt="sonarr_download_client_config">
+<img src="static/sonarr_download_client_config.png" width="600" alt="sonarr_download_client_config">
 
 ## tautulli
 
