@@ -13,7 +13,7 @@ networks:
         driver: bridge
     internal:
         driver: bridge
-    socket_proxy:
+    docker_socket_proxy:
         driver: bridge
 
 ################################################################################
@@ -55,8 +55,8 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock:ro
             - ${DOCKER_DIRECTORY}/traefik/acme/acme.json:/acme.json
         networks:
-            traefik:      null
-            socket_proxy: null
+            traefik:             null
+            docker_socket_proxy: null
         restart:        ${UNIVERSAL_RESTART_POLICY}
         depends_on:
             - socket-proxy
@@ -86,7 +86,7 @@ services:
             - --providers.docker=true
             - --providers.docker.endpoint=tcp://socket-proxy:2375
             - --providers.docker.exposedByDefault=false
-            - --providers.docker.network=socket_proxy
+            - --providers.docker.network=traefik
             - --providers.docker.swarmMode=false
             - --providers.file.directory=/rules
             - --providers.file.watch=true
@@ -131,7 +131,7 @@ services:
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock:ro
         networks:
-            socket_proxy: null
+            docker_socket_proxy: null
         env_file:
             - ${DOCKER_DIRECTORY}/traefik_proxy/proxy_settings.env
         depends_on:
@@ -203,8 +203,8 @@ services:
         image:          containrrr/watchtower:latest
         restart:        unless-stopped
         networks:
-            internal:     null
-            socket_proxy: null
+            internal:            null
+            docker_socket_proxy: null
         depends_on:
             - socket-proxy
         environment:
@@ -511,8 +511,8 @@ services:
             - ${DOCKER_DIRECTORY}/shared:/shared
         command:        -H tcp://socket-proxy:2375
         networks:
-            traefik:      null
-            socket_proxy: null
+            traefik:             null
+            docker_socket_proxy: null
         restart:        ${UNIVERSAL_RESTART_POLICY}
         depends_on:
             - traefik
