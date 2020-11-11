@@ -25,3 +25,4 @@ ombi/config/*
 transmission/config/*
 jackett/config/*
 heimdall/config/*
+portainer/config/*
