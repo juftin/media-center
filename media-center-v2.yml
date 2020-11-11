@@ -34,7 +34,6 @@ services:
         container_name: traefik
         image:          library/traefik:v2.3
         hostname:       ${TRAEFIK_SUBDOMAIN}
-        domainname:     ${DOMAIN_NAME}
         ports:
             -   published: 80
                 target:    80
