@@ -34,6 +34,7 @@ services:
         container_name: traefik
         image:          library/traefik:v2.3
         hostname:       ${TRAEFIK_SUBDOMAIN}
+        domainname:     ${DOMAIN_NAME}
         ports:
             -   published: 80
                 target:    80
@@ -237,12 +238,12 @@ services:
             - PGID=$PGID
             - TZ=$TZ
         labels:
-            traefik.enable:                                              true
-            traefik.http.routers.heimdall-rtr.rule:                      Host(`${DOMAIN_NAME}`)
-            traefik.http.routers.heimdall-rtr.entrypoints:               https
-            traefik.http.routers.heimdall-rtr.service:                   heimdall-svc
-            traefik.http.services.heimdall-svc.loadbalancer.server.port: 80
-            traefik.http.routers.heimdall-rtr.middlewares:               chain-oauth-google@file
+            traefik.enable:                                                       true
+            traefik.http.routers.heimdall-rtr.rule:                               Host(`${DOMAIN_NAME}`)
+            traefik.http.routers.heimdall-rtr.entrypoints:                        https
+            traefik.http.routers.heimdall-rtr.service:                            heimdall-svc
+            traefik.http.services.heimdall-svc.loadbalancer.server.port:          80
+            traefik.http.routers.heimdall-rtr.middlewares:                        chain-oauth-google@file
 
     ####################################
     # OMBI (DOWNLOAD REQUESTS)
