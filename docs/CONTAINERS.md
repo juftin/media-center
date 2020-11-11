@@ -26,7 +26,7 @@ web applications in a simple way. Simplicity is the key to Heimdall.
 Why not use it as your browser start page? It even has the ability to 
 include a search bar using either Google, Bing or DuckDuckGo.
 
-<img src="static/heimdall.png" width="600" alt="Heimdall">
+[<img src="static/heimdall.png" width="600" alt="Heimdall">]()
 
 ###### Notes:
 
@@ -39,7 +39,7 @@ include a search bar using either Google, Bing or DuckDuckGo.
 [GitHub](https://github.com/linuxserver/docker-duckdns) \|\|
 [Website](https://www.duckdns.org)
 
-<img src="static/duckdns.jpg" width="300" alt="duckdns">
+[<img src="static/duckdns.jpg" width="300" alt="duckdns">]()
 
 
 Duckdns is a free service which will point a DNS (sub domains of duckdns.org) 
@@ -113,7 +113,7 @@ Sonarr and Radarr.
 A minimal forward authentication service that provides Google oauth based 
 login and authentication for the traefik reverse proxy/load balancer.
 
-<img src="static/oauth2.png" width="300" alt="oauth">
+[<img src="static/oauth2.png" width="300" alt="oauth">]()
 
 ## ombi
 
@@ -188,7 +188,7 @@ favorite shows and will grab, sort and rename them. It can also be
 configured to automatically upgrade the quality of files already 
 downloaded when a better quality format becomes available.
 
-<img src="static/sonarr_download_client_config.png" width="600" alt="sonarr_download_client_config">
+[<img src="static/sonarr_download_client_config.png" width="600" alt="sonarr_download_client_config">]()
 
 ## tautulli
 
