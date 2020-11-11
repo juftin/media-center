@@ -107,7 +107,7 @@ services:
             - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.delayBeforeCheck=90
             # TESTING SETTINGS (COMMENTED OUT BY DEFAULT)
             - --certificatesResolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory
-#            - --serversTransport.insecureSkipVerify=true
+            # - --serversTransport.insecureSkipVerify=true
         labels:
             traefik.enable:                                                   true
             traefik.http.routers.traefik-rtr.rule:                            Host(`${TRAEFIK_SUBDOMAIN}.${DOMAIN_NAME}`)
@@ -237,10 +237,7 @@ services:
             - TZ=$TZ
         labels:
             traefik.enable:                                                       true
-            traefik.http.routers.heimdall-rtr.rule:                               Host(`${DOMAIN_NAME}`) || Host(`www.${DOMAIN_NAME}`)
-            traefik.http.middlewares.heimdall-redirect.redirectregex.regex:       ^https?://${DOMAIN_NAME}/(.*)
-            traefik.http.middlewares.heimdall-redirect.redirectregex.replacement: https://www.${DOMAIN_NAME}/$${1}
-            traefik.http.middlewares.heimdall-redirect.redirectregex.permanent:   true
+            traefik.http.routers.heimdall-rtr.rule:                               Host(`${DOMAIN_NAME}`
             traefik.http.routers.heimdall-rtr.entrypoints:                        https
             traefik.http.routers.heimdall-rtr.service:                            heimdall-svc
             traefik.http.services.heimdall-svc.loadbalancer.server.port:          80
@@ -278,56 +275,56 @@ services:
     # PLEX (MOVIES AND TV SERVER)
     ####################################
 
-#    plex:
-#        container_name: plex
-#        image:          linuxserver/plex:latest
-#        networks:
-#            internal: null
-#        ports:
-#            # Plex Media Server
-#            -   published: 32400
-#                target:    32400
-#            # Plex DLNA Server
-#            -   protocol:  udp
-#                published: 1900
-#                target:    1900
-#            -   published: 32469
-#                target:    32469
-#            # Plex Home Theater via Plex Companion
-#            -   published: 3005
-#                target:    3005
-#            # Bonjour/Avahi Network Discovery
-#            -   protocol:  udp
-#                published: 5354
-#                target:    5353
-#            # Plex for Roku via Plex Companion
-#            -   published: 8324
-#                target:    8324
-#            # GDM Network Discovery
-#            -   protocol:  udp
-#                published: 32410
-#                target:    32410
-#            -   protocol:  udp
-#                published: 32412
-#                target:    32412
-#            -   protocol:  udp
-#                published: 32413
-#                target:    32413
-#            -   protocol:  udp
-#                published: 32414
-#                target:    32414
-#        volumes:
-#            - ${DOCKER_DIRECTORY}/plex/config:/config
-#            - ${TV_DIR}:/tv
-#            - ${MOVIE_DIR}:/movies
-#            - ${PLEX_TRANSCODE_DIR}:/transcode
-#            - ${DOCKER_DIRECTORY}/shared:/shared
-#        environment:
-#            TZ:      ${TZ}
-#            PUID:    ${PUID}
-#            PGID:    ${PGID}
-#            VERSION: docker
-#        restart:        ${UNIVERSAL_RESTART_POLICY}
+    #    plex:
+    #        container_name: plex
+    #        image:          linuxserver/plex:latest
+    #        networks:
+    #            internal: null
+    #        ports:
+    #            # Plex Media Server
+    #            -   published: 32400
+    #                target:    32400
+    #            # Plex DLNA Server
+    #            -   protocol:  udp
+    #                published: 1900
+    #                target:    1900
+    #            -   published: 32469
+    #                target:    32469
+    #            # Plex Home Theater via Plex Companion
+    #            -   published: 3005
+    #                target:    3005
+    #            # Bonjour/Avahi Network Discovery
+    #            -   protocol:  udp
+    #                published: 5354
+    #                target:    5353
+    #            # Plex for Roku via Plex Companion
+    #            -   published: 8324
+    #                target:    8324
+    #            # GDM Network Discovery
+    #            -   protocol:  udp
+    #                published: 32410
+    #                target:    32410
+    #            -   protocol:  udp
+    #                published: 32412
+    #                target:    32412
+    #            -   protocol:  udp
+    #                published: 32413
+    #                target:    32413
+    #            -   protocol:  udp
+    #                published: 32414
+    #                target:    32414
+    #        volumes:
+    #            - ${DOCKER_DIRECTORY}/plex/config:/config
+    #            - ${TV_DIR}:/tv
+    #            - ${MOVIE_DIR}:/movies
+    #            - ${PLEX_TRANSCODE_DIR}:/transcode
+    #            - ${DOCKER_DIRECTORY}/shared:/shared
+    #        environment:
+    #            TZ:      ${TZ}
+    #            PUID:    ${PUID}
+    #            PGID:    ${PGID}
+    #            VERSION: docker
+    #        restart:        ${UNIVERSAL_RESTART_POLICY}
 
     ####################################
     # TAUTULLI (PLEX SERVER MONITORING)
