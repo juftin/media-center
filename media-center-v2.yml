@@ -171,6 +171,7 @@ services:
             traefik.http.routers.oauth-rtr.entrypoints:               https
             traefik.http.routers.oauth-rtr.service:                   oauth-svc
             traefik.http.services.oauth-svc.loadbalancer.server.port: 4181
+            traefik.http.routers.oauth-rtr.middlewares:               chain-oauth-google@file
 
     ########################################################
     # BACK-END APPLICATIONS
