@@ -39,6 +39,9 @@ include a search bar using either Google, Bing or DuckDuckGo.
 [GitHub](https://github.com/linuxserver/docker-duckdns) \|\|
 [Website](https://www.duckdns.org)
 
+<img src="static/duckdns.jpg" width="300" alt="duckdns">
+
+
 Duckdns is a free service which will point a DNS (sub domains of duckdns.org) 
 to an IP of your choice. The service is completely free, and doesn't 
 require reactivation or forum posts to maintain its existence.
@@ -109,6 +112,8 @@ Sonarr and Radarr.
 
 A minimal forward authentication service that provides Google oauth based 
 login and authentication for the traefik reverse proxy/load balancer.
+
+<img src="static/oauth2.png" width="300" alt="oauth">
 
 ## ombi
 
