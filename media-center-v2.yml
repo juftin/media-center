@@ -281,7 +281,7 @@ services:
         image:          linuxserver/plex:latest
         network_mode:   host
         volumes:
-            - /plex/config:/config
+            - ${DOCKER_DIRECTORY}/plex/config:/config
             - ${TV_DIR}:/tv
             - ${MOVIE_DIR}:/movies
             - ${PLEX_TRANSCODE_DIR}:/transcode
