@@ -1,4 +1,4 @@
-# <img src="static/duckdns.jpg" width="150" alt="duckdns"> media-center
+# <img src="docs/static/juftin.png" width="150" alt="juftin">  media-center
 
 Docker Configuration for Running a Media Center at Home.
 
