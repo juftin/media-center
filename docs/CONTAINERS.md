@@ -1,57 +1,68 @@
 # Containers
 
--   [heimdall](#heimdall)
--   [duckdns](#duckdns)
--   [jackett](#jackett)
--   [oauth](#oauth)
--   [ombi](#oauth)
--   [watchtower](#watchtower)
 -   [plex](#plex)
--   [portainer](#portainer)
--   [radarr](#radarr)
 -   [sonarr](#sonarr)
+-   [jackett](#jackett)
+-   [radarr](#radarr)
+-   [ombi](#ombi)
+-   [heimdall](#heimdall)
+-   [portainer](#portainer)
 -   [tautulli](#tautulli)
 -   [traefik](#traefik)
 -   [transmission](#transmission)
+-   [oauth](#oauth)
+-   [watchtower](#watchtower)
+-   [duckdns](#duckdns)
+-   [resume](#resume)
 
+## plex
 
-## heimdall
+[Docker Hub](https://hub.docker.com/r/linuxserver/plex/) \|\|
+[GitHub](https://github.com/linuxserver/docker-plex) \|\|
+[Website](https://plex.tv) \|\|
+[Documentation](https://support.plex.tv/articles/)
 
-[Docker Hub](https://hub.docker.com/r/linuxserver/heimdall/) \|\|
-[GitHub](https://github.com/linuxserver/docker-heimdall) \|\|
-[Website](https://www.heimdall.site)
+Plex organizes video, music and photos from personal media libraries 
+and streams them to smart TVs, streaming boxes and mobile devices. This 
+container is packaged as a standalone Plex Media Server. Straightforward 
+design and bulk actions mean getting things done faster.
 
-<img src="static/heimdall_logo.png" width="300" alt="Heimdall Logo">
+#### Configuration:
 
-Heimdall is a way to organise all those links to your most used web sites and 
-web applications in a simple way. Simplicity is the key to Heimdall. 
-Why not use it as your browser start page? It even has the ability to 
-include a search bar using either Google, Bing or DuckDuckGo.
+Plex setup is fairly intuitive and straightforward. When setting up libraries you will
+use the root directories, `/tv/` and `/movies/`
 
-<img src="static/heimdall.png" width="600" alt="Heimdall">
+## sonarr
 
-###### Notes:
+[Docker Hub](https://hub.docker.com/r/linuxserver/sonarr/) \|\|
+[GitHub](https://github.com/linuxserver/docker-sonarr) \|\|
+[Documentation](https://github.com/Sonarr/Sonarr/wiki)
 
-> enter the full url path of the domain in new tabs 
-> for a redirect. (ie. `https://app.example.com`)
+Sonarr (formerly NZBdrone) is a PVR for usenet and bittorrent users. 
+It can monitor multiple RSS feeds for new episodes of your 
+favorite shows and will grab, sort and rename them. It can also be 
+configured to automatically upgrade the quality of files already 
+downloaded when a better quality format becomes available.
 
-## duckdns
+#### Configuration:
 
-[Docker Hub](https://hub.docker.com/r/linuxserver/duckdns/) \|\|
-[GitHub](https://github.com/linuxserver/docker-duckdns) \|\|
-[Website](https://www.duckdns.org)
+For security, I like to set up a basic authorization form on the `General Settings` to
+exclude non-admin users from accessing the application using the `ADMIN_USER` and 
+`ADMIN_PASSWORD` variables.
 
-<img src="static/duckdns.jpg" width="300" alt="duckdns">
+##### Download Client Configuration:
 
+<img src="static/sonarr_download_client_config.png" width="600" alt="sonarr_download_client_config">
 
-Duckdns is a free service which will point a DNS (sub domains of duckdns.org) 
-to an IP of your choice. The service is completely free, and doesn't 
-require reactivation or forum posts to maintain its existence.
+##### Indexer Client Configuration:
+
+<img src="static/sonarr_indexer_config.png" width="600" alt="sonarr_indexer_config">
 
 ## jackett
 
 [Docker Hub](https://hub.docker.com/r/linuxserver/jackett/) \|\|
-[GitHub](https://github.com/linuxserver/docker-jackett)
+[GitHub](https://github.com/linuxserver/docker-jackett) |\|
+[Documentation](https://github.com/Jackett/Jackett/wiki)
 
 <img src="static/jackett_logo.png" width="300" alt="Jackett Logo">
 
@@ -108,15 +119,22 @@ Sonarr and Radarr.
 >
 > Make sure to pay close attention to the category codes relating to your particular download type.
 
-## oauth
+## radarr
 
-[Docker Hub](https://hub.docker.com/r/thomseddon/traefik-forward-auth) \|\|
-[GitHub](https://github.com/thomseddon/traefik-forward-auth)
+[Docker Hub](https://hub.docker.com/r/linuxserver/radarr/) \|\|
+[GitHub](https://github.com/linuxserver/docker-radarr) \|\|
+[Documentation](https://github.com/Radarr/Radarr/wiki)
 
-<img src="static/oauth2.png" width="300" alt="oauth">
+Radarr is an independent fork of Sonarr reworked for automatically 
+downloading movies via Usenet and BitTorrent.
 
-A minimal forward authentication service that provides Google oauth based 
-login and authentication for the traefik reverse proxy/load balancer.
+#### Configuration:
+
+See the [jackett](#jackett) and [radarr](#radarr) sections for more detailed 
+instructions around setting up Indexers and Download clients with radarr. For 
+security, I like to set up a basic authorization form on the `General Settings` to
+exclude non-admin users from accessing the application using the `ADMIN_USER` and 
+`ADMIN_PASSWORD` variables.
 
 ## ombi
 
@@ -154,33 +172,25 @@ Please refer to the documentation link for further details.
 
 <img src="static/ombi_radarr_config.png" width="600" alt="ombi_radarr_config">
 
-## watchtower
+## heimdall
 
-[Docker Hub](https://hub.docker.com/r/containrrr/watchtower) \|\|
-[GitHub](https://github.com/containrrr/watchtower) \|\|
-[Documentation](https://containrrr.dev/watchtower/)
+[Docker Hub](https://hub.docker.com/r/linuxserver/heimdall/) \|\|
+[GitHub](https://github.com/linuxserver/docker-heimdall) \|\|
+[Website](https://www.heimdall.site)
 
-With watchtower you can update the running version of your containerized 
-app simply by pushing a new image to the Docker Hub or your own image registry. 
-Watchtower will pull down your new image, gracefully shut down your 
-existing container and restart it with the same options that were used 
-when it was deployed initially.
+<img src="static/heimdall_logo.png" width="300" alt="Heimdall Logo">
 
-## plex
+Heimdall is a way to organise all those links to your most used web sites and 
+web applications in a simple way. Simplicity is the key to Heimdall. 
+Why not use it as your browser start page? It even has the ability to 
+include a search bar using either Google, Bing or DuckDuckGo.
 
-[Docker Hub](https://hub.docker.com/r/linuxserver/plex/) \|\|
-[GitHub](https://github.com/linuxserver/docker-plex) \|\|
-[Website](https://plex.tv)
+<img src="static/heimdall.png" width="600" alt="Heimdall">
 
-Plex organizes video, music and photos from personal media libraries 
-and streams them to smart TVs, streaming boxes and mobile devices. This 
-container is packaged as a standalone Plex Media Server. Straightforward 
-design and bulk actions mean getting things done faster.
+###### Notes:
 
-#### Configuration:
-
-Plex setup is fairly intuitive and straightforward. When setting up libraries you will
-use the root directories, `/tv/` and `/movies/`
+> enter the full url path of the domain in new tabs 
+> for a redirect. (ie. `https://app.example.com`)
 
 ## portainer
 
@@ -198,26 +208,11 @@ Portainer allows you to manage all your Docker resources (containers, images, vo
 networks and more) ! It is compatible with the standalone Docker engine and 
 with Docker Swarm mode.
 
-## radarr
+#### Configuration:
 
-[Docker Hub](https://hub.docker.com/r/linuxserver/radarr/) \|\|
-[GitHub](https://github.com/linuxserver/docker-radarr)
-
-Radarr is an independent fork of Sonarr reworked for automatically 
-downloading movies via Usenet and BitTorrent.
-
-## sonarr
-
-[Docker Hub](https://hub.docker.com/r/linuxserver/sonarr/) \|\|
-[GitHub](https://github.com/linuxserver/docker-sonarr)
-
-Sonarr (formerly NZBdrone) is a PVR for usenet and bittorrent users. 
-It can monitor multiple RSS feeds for new episodes of your 
-favorite shows and will grab, sort and rename them. It can also be 
-configured to automatically upgrade the quality of files already 
-downloaded when a better quality format becomes available.
-
-<img src="static/sonarr_download_client_config.png" width="600" alt="sonarr_download_client_config">
+The administration password is set using the `ADMIN_HTPASSWD` on the [`.env` file](../example.env).
+By default the username is `admin`. I prefer to create a new admin user using both `ADMIN_USER` and 
+`ADMIN_PASSWORD` variables.
 
 ## tautulli
 
@@ -233,6 +228,11 @@ The only thing missing is "why they watched it", but who am I to question
 your 42 plays of Frozen. All statistics are presented in a nice and clean 
 interface with many tables and graphs, which makes it easy to brag about 
 your server to everyone else.
+
+#### Tautulli:
+
+Tautulli configuration is simple, and automated upon first launch of the
+application.
 
 ## traefik
 
@@ -260,7 +260,10 @@ make the setup easier.
 
 ###### Notes:
 
-> This container has a health check that pings google.com with data 
+>Currently, transmission is avaiulable to any user whitelisted by Google OAuth. 
+>There should be future work to add an extra layer of proection.  
+>
+>This container has a health check that pings google.com with data 
 >to verify a stable connnection. Traefik takes roughly 
 >5 minutes to recognize this container as healthy before making it available.
 >
@@ -272,3 +275,55 @@ make the setup easier.
 ------
 
 ###### [SOURCE DOCUMENTATION](../README.md)
+
+## oauth
+
+[Docker Hub](https://hub.docker.com/r/thomseddon/traefik-forward-auth) \|\|
+[GitHub](https://github.com/thomseddon/traefik-forward-auth)
+
+<img src="static/oauth2.png" width="300" alt="oauth">
+
+A minimal forward authentication service that provides Google oauth based 
+login and authentication for the traefik reverse proxy/load balancer.
+
+## watchtower
+
+[Docker Hub](https://hub.docker.com/r/containrrr/watchtower) \|\|
+[GitHub](https://github.com/containrrr/watchtower) \|\|
+[Documentation](https://containrrr.dev/watchtower/)
+
+With watchtower you can update the running version of your containerized 
+app simply by pushing a new image to the Docker Hub or your own image registry. 
+Watchtower will pull down your new image, gracefully shut down your 
+existing container and restart it with the same options that were used 
+when it was deployed initially.
+
+## duckdns
+
+[Docker Hub](https://hub.docker.com/r/linuxserver/duckdns/) \|\|
+[GitHub](https://github.com/linuxserver/docker-duckdns) \|\|
+[Website](https://www.duckdns.org)
+
+<img src="static/duckdns.jpg" width="300" alt="duckdns">
+
+Duckdns is a free service which will point a DNS (sub domains of duckdns.org) 
+to an IP of your choice. The service is completely free, and doesn't 
+require reactivation or forum posts to maintain its existence.
+
+## duckdns
+
+[Docker Hub](https://hub.docker.com/r/linuxserver/duckdns/) \|\|
+[GitHub](https://github.com/linuxserver/docker-duckdns) \|\|
+[Website](https://www.duckdns.org)
+
+<img src="static/duckdns.jpg" width="300" alt="duckdns">
+
+Duckdns is a free service which will point a DNS (sub domains of duckdns.org) 
+to an IP of your choice. The service is completely free, and doesn't 
+require reactivation or forum posts to maintain its existence.
+
+## resume
+
+The resume container is a static file hosting application. The underlying
+mechanics are aa nginx webserver installed on a ubuntu image with a PDF file displayed
+as an iFrame. 
