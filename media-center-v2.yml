@@ -468,7 +468,6 @@ services:
         environment:
             TZ: ${TZ}
         volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
             - ${DOCKER_DIRECTORY}/portainer/config:/data
             - ${DOCKER_DIRECTORY}/shared:/shared
         command:        "-H tcp://socket-proxy:2375 --admin-password='${ADMIN_HTPASSWD}'"
