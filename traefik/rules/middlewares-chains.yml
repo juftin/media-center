@@ -6,18 +6,16 @@ http:
         # CHAINS
         ####################################
 
+        chain-local-testing:
+            chain:
+                middlewares:
+                    - middlewares-rate-limit
+
         chain-no-auth:
             chain:
                 middlewares:
                     - middlewares-rate-limit
                     - middlewares-secure-headers
-
-        chain-basic-auth:
-            chain:
-                middlewares:
-                    - middlewares-rate-limit
-                    - middlewares-secure-headers
-                    - middlewares-basic-auth
 
         chain-oauth-google:
             chain:

@@ -21,14 +21,14 @@
 [GitHub](https://github.com/linuxserver/docker-heimdall) \|\|
 [Website](https://www.heimdall.site)
 
-[<img src="static/heimdall_logo.png" width="300" alt="Heimdall Logo">](#)
+<img src="static/heimdall_logo.png" width="300" alt="Heimdall Logo">
 
 Heimdall is a way to organise all those links to your most used web sites and 
 web applications in a simple way. Simplicity is the key to Heimdall. 
 Why not use it as your browser start page? It even has the ability to 
 include a search bar using either Google, Bing or DuckDuckGo.
 
-[<img src="static/heimdall.png" width="600" alt="Heimdall">](#)
+<img src="static/heimdall.png" width="600" alt="Heimdall">
 
 ###### Notes:
 
@@ -41,7 +41,7 @@ include a search bar using either Google, Bing or DuckDuckGo.
 [GitHub](https://github.com/linuxserver/docker-duckdns) \|\|
 [Website](https://www.duckdns.org)
 
-[<img src="static/duckdns.jpg" width="300" alt="duckdns">](#)
+<img src="static/duckdns.jpg" width="300" alt="duckdns">
 
 
 Duckdns is a free service which will point a DNS (sub domains of duckdns.org) 
@@ -53,7 +53,7 @@ require reactivation or forum posts to maintain its existence.
 [Docker Hub](https://hub.docker.com/r/linuxserver/jackett/) \|\|
 [GitHub](https://github.com/linuxserver/docker-jackett)
 
-[<img src="static/jackett_logo.png" width="300" alt="Jackett Logo">](#)
+<img src="static/jackett_logo.png" width="300" alt="Jackett Logo">
 
 Jackett works as a proxy server: it translates queries from apps 
 (Sonarr, SickRage, CouchPotato, Mylar, etc) into tracker-site-specific 
@@ -69,7 +69,7 @@ top right of the page. To track a new indexer, click `+Add Indexer` and search f
 it by name. These entries will be added as TORZNAB feeds on applications like
 Sonarr and Radarr.
 
-[<img src="static/jackett_add_indexer.png" width="500" alt="jackett_add_indexer">](#)
+<img src="static/jackett_add_indexer.png" width="500" alt="jackett_add_indexer">
 
 #### Recommended Indexers:
 
@@ -113,7 +113,7 @@ Sonarr and Radarr.
 [Docker Hub](https://hub.docker.com/r/thomseddon/traefik-forward-auth) \|\|
 [GitHub](https://github.com/thomseddon/traefik-forward-auth)
 
-[<img src="static/oauth2.png" width="300" alt="oauth">](#)
+<img src="static/oauth2.png" width="300" alt="oauth">
 
 A minimal forward authentication service that provides Google oauth based 
 login and authentication for the traefik reverse proxy/load balancer.
@@ -125,7 +125,7 @@ login and authentication for the traefik reverse proxy/load balancer.
 [Website](https://ombi.io/) \|\|
 [Documentation](https://github.com/tidusjar/Ombi/wiki)
 
-[<img src="static/ombi_logo.png" width="400" alt="Jackett Logo">](#)
+<img src="static/ombi_logo.png" width="400" alt="ombi_logo">
 
 Ombi allows you to host your own Plex Request and user management system. 
 If you are sharing your Plex server with other users, allow 
@@ -144,15 +144,15 @@ Please refer to the documentation link for further details.
 
 ##### Media Server (Plex) Config
 
-[<img src="static/ombi_plex_config.png" width="600" alt="ombi_plex_config">](#)
+<img src="static/ombi_plex_config.png" width="600" alt="ombi_plex_config">
 
 ##### TV (Sonarr) Config
 
-[<img src="static/ombi_sonarr_config.png" width="600" alt="ombi_sonarr_config">](#)
+<img src="static/ombi_sonarr_config.png" width="600" alt="ombi_sonarr_config">
 
 ##### Movies (Radarr) Config
 
-[<img src="static/ombi_radarr_config.png" width="600" alt="ombi_radarr_config">](#)
+<img src="static/ombi_radarr_config.png" width="600" alt="ombi_radarr_config">
 
 ## watchtower
 
@@ -212,7 +212,7 @@ favorite shows and will grab, sort and rename them. It can also be
 configured to automatically upgrade the quality of files already 
 downloaded when a better quality format becomes available.
 
-[<img src="static/sonarr_download_client_config.png" width="600" alt="sonarr_download_client_config">](#)
+<img src="static/sonarr_download_client_config.png" width="600" alt="sonarr_download_client_config">
 
 ## tautulli
 
