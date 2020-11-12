@@ -61,15 +61,20 @@ all applications. All relevant hints can be found within.
 
 #### `acme.json`
 
-This repository comes initiated with an empty [acme.json](traefik/acme/acme.json) file. However, while
-initially setting up it will be useful to remove and recreate the file to force
-certificate recreation. The instructions are below:
+You will need to create an empty [acme.json](traefik/acme/acme.json) file for the
+application to work and geerate an SSL Certificate through LetsEncrypt. 
+However, while initially setting up it will be useful to remove and recreate the file to force
+certificate recreation. Keep in mind that certificate creation and registration can take some tie.
+uncomment the `certificatesResolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory` 
+command on the traefik service in the [docker-compose](media-center-v2.yml) file while testing. 
+The instructions are below:
 
   - file location: [`traefik/config/acme/acme.json`](traefik/acme/acme.json)
   - file permissions (chmod): `600`
 
 ```shell script
 mkdir -p traefik/acme/ && \
+  rm -f traefik/acme/acme.json && \
   touch traefik/acme/acme.json && \
   chmod 600 traefik/acme/acme.json
 ```
