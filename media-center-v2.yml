@@ -70,9 +70,8 @@ services:
             - --api.dashboard=true
             # LOGGING SETTINGS
             - --log=true
-            - --log.level=DEBUG # DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+            - --log.level=INFO # DEBUG, INFO, WARN, ERROR, FATAL, PANIC
             - --log.format=COMMON
-            - --log.filePath=/logs/traefik.log
             - --accessLog=true
             - --accessLog.filePath=/logs/access.log
             - --accessLog.format=JSON

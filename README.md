@@ -68,7 +68,11 @@ certificate recreation. The instructions are below:
   - file location: [`traefik/config/acme/acme.json`](traefik/acme/acme.json)
   - file permissions (chmod): `600`
 
-
+```shell script
+mkdir -p traefik/acme/ && \
+  touch traefik/acme/acme.json && \
+  chmod 600 traefik/acme/acme.json
+```
 
 * * *
 
