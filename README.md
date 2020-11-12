@@ -11,7 +11,7 @@ Docker Configuration for Running a Media Center at Home.
         -   [.env](#env)
         -   [traefik.toml](#traefiktoml)
         -   [acme.json](#acmejson)
-    -   [Containers](#containers-and-application-configuration)
+    -   [Application Setup + Container Info](#application-setup--container-info)
 
 * * *
 
@@ -47,7 +47,7 @@ A free DuckDNS dynamic DNS subdomain can be set up [here](https://www.duckdns.or
 
 #### `.env`
 
-The [`media-center.yml`](media-center.yml) file can be left alone if the default list of services 
+The [`media-center.yml`](media-center-juftin-personal.yml) file can be left alone if the default list of services 
 is acceptable. The [`example.env`](example.env) file can be modified and renamed `.env` in order 
 for the containers to be build properly. This is the entire configuration file for
 all applications. All relevant hints can be found within.
@@ -59,7 +59,7 @@ application to work and generate an SSL Certificate through LetsEncrypt.
 However, while initially setting up it will be useful to remove and recreate the file to force
 certificate recreation. Keep in mind that certificate creation and registration can take some tie.
 uncomment the `certificatesResolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory` 
-command on the traefik service in the [docker-compose](media-center-v2.yml) file while testing. 
+command on the traefik service in the [docker-compose](media-center-juftin-personal.yml) file while testing. 
 The instructions are below:
 
   - file location: [`traefik/config/acme/acme.json`](traefik/acme/acme.json)
@@ -72,7 +72,7 @@ mkdir -p traefik/acme/ && \
   chmod 600 traefik/acme/acme.json
 ```
 
-### Containers and Application Configuration
+### Application Setup + Container Info
 
 Most application set up and configuration is straightforward. 
 Please review the information of the various containers and applications. 

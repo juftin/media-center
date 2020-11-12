@@ -304,12 +304,6 @@ Duckdns is a free service which will point a DNS (sub domains of duckdns.org)
 to an IP of your choice. The service is completely free, and doesn't 
 require reactivation or forum posts to maintain its existence.
 
-## resume
-
-The resume container is a static file hosting application. The underlying
-mechanics are aa nginx webserver installed on a ubuntu image with a PDF file displayed
-as an iFrame. 
-
 ------
 ------
 
