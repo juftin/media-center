@@ -1,4 +1,4 @@
-# media-center
+# <img src="static/duckdns.jpg" width="150" alt="duckdns"> media-center
 
 Docker Configuration for Running a Media Center at Home.
 
@@ -62,7 +62,7 @@ all applications. All relevant hints can be found within.
 #### `acme.json`
 
 You will need to create an empty [acme.json](traefik/acme/acme.json) file for the
-application to work and geerate an SSL Certificate through LetsEncrypt. 
+application to work and generate an SSL Certificate through LetsEncrypt. 
 However, while initially setting up it will be useful to remove and recreate the file to force
 certificate recreation. Keep in mind that certificate creation and registration can take some tie.
 uncomment the `certificatesResolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory` 
