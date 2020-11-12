@@ -177,6 +177,11 @@ and streams them to smart TVs, streaming boxes and mobile devices. This
 container is packaged as a standalone Plex Media Server. Straightforward 
 design and bulk actions mean getting things done faster.
 
+#### Configuration:
+
+Plex setup is fairly intuitive and straightforward. When setting up libraries you will
+use the root directories, `/tv/` and `/movies/`
+
 ## portainer
 
 [Docker Hub](https://hub.docker.com/r/portainer/portainer/) \|\|
@@ -261,3 +266,9 @@ make the setup easier.
 >
 > As a sanity check I like to use the torrent magnet 
 >IP tool at <https://ipleak.net> to verfiy a stable VPN connection.
+
+
+------
+------
+
+###### [SOURCE DOCUMENTATION](../README.md)

@@ -70,7 +70,7 @@ services:
             - --api.dashboard=true
             # LOGGING SETTINGS
             - --log=true
-            - --log.level=DEBUG # DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+            - --log.level=INFO # DEBUG, INFO, WARN, ERROR, FATAL, PANIC
             - --log.format=COMMON
             - --accessLog=true
             - --accessLog.filePath=/logs/access.log
@@ -471,7 +471,7 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock
             - ${DOCKER_DIRECTORY}/portainer/config:/data
             - ${DOCKER_DIRECTORY}/shared:/shared
-        command:        -H tcp://socket-proxy:2375 --admin-password="${ADMIN_HTPASSWD}"
+        command:        -H tcp://socket-proxy:2375
         networks:
             traefik:             null
             docker_socket_proxy: null
