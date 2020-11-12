@@ -270,12 +270,6 @@ make the setup easier.
 > As a sanity check I like to use the torrent magnet 
 >IP tool at <https://ipleak.net> to verfiy a stable VPN connection.
 
-
-------
-------
-
-###### [SOURCE DOCUMENTATION](../README.md)
-
 ## oauth
 
 [Docker Hub](https://hub.docker.com/r/thomseddon/traefik-forward-auth) \|\|
@@ -315,3 +309,8 @@ require reactivation or forum posts to maintain its existence.
 The resume container is a static file hosting application. The underlying
 mechanics are aa nginx webserver installed on a ubuntu image with a PDF file displayed
 as an iFrame. 
+
+------
+------
+
+###### [SOURCE DOCUMENTATION](../README.md)

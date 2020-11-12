@@ -11,14 +11,7 @@ Docker Configuration for Running a Media Center at Home.
         -   [.env](#env)
         -   [traefik.toml](#traefiktoml)
         -   [acme.json](#acmejson)
--   [Set Up](#set-up)
-    -   [Containers](#containers)
-    -   [Networking](#networking)
-
-
--   Additional Links
-    -   [Networking Documentation](docs/docker_networking.md)
-    -   [Container Information](docs/docker_containers.md)
+    -   [Containers](#containers-and-application-configuration)
 
 * * *
 
@@ -79,19 +72,19 @@ mkdir -p traefik/acme/ && \
   chmod 600 traefik/acme/acme.json
 ```
 
-* * *
-
-* * *
-
-## Set Up
+### Containers and Application Configuration
 
 Most application set up and configuration is straightforward. 
-Please follow the documentation links in the below list 
-of containers for more information.
+Please review the information of the various containers and applications. 
+Helpful descriptions, screenshots are available to assist in initial configuration.
+Important links to the source code, documentation,
+and more are available for review as well. 
 
-### [Containers](docs/CONTAINERS.md)
+#### [LINK TO CONTAINER/APPLICATION DOCUMENTATION](docs/CONTAINERS.md)
 
-The full list of containers can be found [here](docs/CONTAINERS.md). This list contains a brief explanation of each docker container and important links to the source code, documentation, and more.
+* * *
+
+* * *
 
 <br/>
 <br/>
