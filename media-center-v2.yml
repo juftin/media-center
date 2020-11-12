@@ -70,7 +70,7 @@ services:
             - --api.dashboard=true
             # LOGGING SETTINGS
             - --log=true
-            - --log.level=INFO # DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+            - --log.level=DEBUG # DEBUG, INFO, WARN, ERROR, FATAL, PANIC
             - --log.format=COMMON
             - --accessLog=true
             - --accessLog.filePath=/logs/access.log
