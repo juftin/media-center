@@ -484,28 +484,3 @@ services:
             traefik.http.routers.portainer-rtr.service:                   portainer-svc
             traefik.http.services.portainer-svc.loadbalancer.server.port: 9000
             traefik.http.routers.portainer-rtr.middlewares:               chain-oauth-google@file
-
-    ####################################
-    # RESUME (FILE STATIC HOSTING)
-    ####################################
-
-    resume:
-        container_name: resume
-        build:
-            context:    ${DOCKER_DIRECTORY}/resume/
-            dockerfile: Dockerfile
-        networks:
-            traefik: null
-        volumes:
-            - ${DOCKER_DIRECTORY}/resume/web/:/var/www/html/
-            - ${DOCKER_DIRECTORY}/resume/web/:/usr/share/nginx/html/
-        restart:        ${UNIVERSAL_RESTART_POLICY}
-        depends_on:
-            - traefik
-        labels:
-            traefik.enable:                                            true
-            traefik.http.routers.resume-rtr.rule:                      Host(`${RESUME_SUBDOMAIN}.${DOMAIN_NAME}`)
-            traefik.http.routers.resume-rtr.entrypoints:               https
-            traefik.http.routers.resume-rtr.service:                   resume-svc
-            traefik.http.services.resume-svc.loadbalancer.server.port: 7856
-            traefik.http.routers.resume-rtr.middlewares:               chain-no-auth@file

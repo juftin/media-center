@@ -13,7 +13,6 @@
 -   [oauth](#oauth)
 -   [watchtower](#watchtower)
 -   [duckdns](#duckdns)
--   [resume](#resume)
 
 ## plex
 
