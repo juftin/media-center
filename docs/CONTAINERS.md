@@ -21,6 +21,8 @@
 [Website](https://plex.tv) \|\|
 [Documentation](https://support.plex.tv/articles/)
 
+<img src="static/plex_logo.png" width="290" alt="Plex Logo">
+
 Plex organizes video, music and photos from personal media libraries 
 and streams them to smart TVs, streaming boxes and mobile devices. This 
 container is packaged as a standalone Plex Media Server. Straightforward 
@@ -36,6 +38,8 @@ use the root directories, `/tv/` and `/movies/`
 [Docker Hub](https://hub.docker.com/r/linuxserver/sonarr/) \|\|
 [GitHub](https://github.com/linuxserver/docker-sonarr) \|\|
 [Documentation](https://github.com/Sonarr/Sonarr/wiki)
+
+<img src="static/sonarr_logo.png" width="250" alt="Sonarr Logo">
 
 Sonarr (formerly NZBdrone) is a PVR for usenet and bittorrent users. 
 It can monitor multiple RSS feeds for new episodes of your 
@@ -63,7 +67,7 @@ exclude non-admin users from accessing the application using the `ADMIN_USER` an
 [GitHub](https://github.com/linuxserver/docker-jackett) |\|
 [Documentation](https://github.com/Jackett/Jackett/wiki)
 
-<img src="static/jackett_logo.png" width="300" alt="Jackett Logo">
+<img src="static/jackett_logo.png" width="200" alt="Jackett Logo">
 
 Jackett works as a proxy server: it translates queries from apps 
 (Sonarr, SickRage, CouchPotato, Mylar, etc) into tracker-site-specific 
@@ -124,12 +128,14 @@ Sonarr and Radarr.
 [GitHub](https://github.com/linuxserver/docker-radarr) \|\|
 [Documentation](https://github.com/Radarr/Radarr/wiki)
 
+<img src="static/radarr_logo.png" width="250" alt="Radarr Logo">
+
 Radarr is an independent fork of Sonarr reworked for automatically 
 downloading movies via Usenet and BitTorrent.
 
 #### Configuration:
 
-See the [jackett](#jackett) and [radarr](#radarr) sections for more detailed 
+See the [jackett](#jackett) and [sonarr](#sonarr) sections for more detailed 
 instructions around setting up Indexers and Download clients with radarr. For 
 security, I like to set up a basic authorization form on the `General Settings` to
 exclude non-admin users from accessing the application using the `ADMIN_USER` and 
@@ -142,7 +148,7 @@ exclude non-admin users from accessing the application using the `ADMIN_USER` an
 [Website](https://ombi.io/) \|\|
 [Documentation](https://github.com/tidusjar/Ombi/wiki)
 
-<img src="static/ombi_logo.png" width="400" alt="ombi_logo">
+<img src="static/ombi_logo.png" width="300" alt="ombi_logo">
 
 Ombi allows you to host your own Plex Request and user management system. 
 If you are sharing your Plex server with other users, allow 
@@ -198,6 +204,8 @@ include a search bar using either Google, Bing or DuckDuckGo.
 [Website](https://www.portainer.io/) \|\|
 [Documentation](https://portainer.readthedocs.io/en/stable/)
 
+<img src="static/portainer_logo.png" width="250" alt="Portainer Logo">
+
 Portainer is a lightweight management UI which allows you to 
 easily manage your different Docker environments (Docker hosts or Swarm clusters).
 Portainer is meant to be as simple to deploy as it is to use. It consists of
@@ -219,6 +227,8 @@ By default the username is `admin`. I prefer to create a new admin user using bo
 [GitHub](https://github.com/linuxserver/docker-tautulli) \|\|
 [Website](https://tautulli.com/)
 
+<img src="static/tautulli_logo.png" width="250" alt="tautulli Logo">
+
 Tautulli is a 3rd party application that you can run alongside 
 your Plex Media Server to monitor activity and track various statistics. 
 Most importantly, these statistics include what has been watched, 
@@ -228,7 +238,7 @@ your 42 plays of Frozen. All statistics are presented in a nice and clean
 interface with many tables and graphs, which makes it easy to brag about 
 your server to everyone else.
 
-#### Tautulli:
+#### Configuration:
 
 Tautulli configuration is simple, and automated upon first launch of the
 application.
@@ -239,6 +249,8 @@ application.
 [GitHub](https://github.com/containous/traefik) \|\|
 [Website](https://traefik.io/) \|\|
 [Documentation](https://docs.traefik.io/)
+
+<img src="static/traefik_logo.png" width="300" alt="traefik Logo">
 
 Traefik (pronounced traffic) is a modern HTTP reverse proxy 
 and load balancer that makes deploying microservices easy. 
@@ -251,6 +263,8 @@ at your orchestrator should be the only configuration step you need.
 
 [Docker Hub](https://hub.docker.com/r/haugene/transmission-openvpn) \|\|
 [GitHub](https://github.com/haugene/docker-transmission-openvpn)
+
+<img src="static/transmission_logo.png" width="250" alt="traefik Logo">
 
 This container contains OpenVPN and Transmission with a configuration 
 where Transmission is running only when OpenVPN has an active tunnel. 
@@ -274,7 +288,7 @@ make the setup easier.
 [Docker Hub](https://hub.docker.com/r/thomseddon/traefik-forward-auth) \|\|
 [GitHub](https://github.com/thomseddon/traefik-forward-auth)
 
-<img src="static/oauth2.png" width="300" alt="oauth">
+<img src="static/oauth2.png" width="250" alt="oauth">
 
 A minimal forward authentication service that provides Google oauth based 
 login and authentication for the traefik reverse proxy/load balancer.
@@ -284,6 +298,8 @@ login and authentication for the traefik reverse proxy/load balancer.
 [Docker Hub](https://hub.docker.com/r/containrrr/watchtower) \|\|
 [GitHub](https://github.com/containrrr/watchtower) \|\|
 [Documentation](https://containrrr.dev/watchtower/)
+
+<img src="static/watchtower_logo.png" width="250" alt="traefik Logo">
 
 With watchtower you can update the running version of your containerized 
 app simply by pushing a new image to the Docker Hub or your own image registry. 
@@ -297,7 +313,7 @@ when it was deployed initially.
 [GitHub](https://github.com/linuxserver/docker-duckdns) \|\|
 [Website](https://www.duckdns.org)
 
-<img src="static/duckdns.jpg" width="300" alt="duckdns">
+<img src="static/duckdns.jpg" width="250" alt="duckdns">
 
 Duckdns is a free service which will point a DNS (sub domains of duckdns.org) 
 to an IP of your choice. The service is completely free, and doesn't 

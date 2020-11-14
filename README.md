@@ -1,6 +1,15 @@
-# <img src="docs/static/juftin.png" width="150" alt="juftin">  media-center
+<p align="center">
+  <img src="docs/static/juftin.png" width="150" alt="juftin">
+</p>
 
-Docker Configuration for Running a Media Center at Home.
+# <center> media-center </center>
+
+
+Home media server docker-compose project built on Docker.  It's a docker-compose project built
+around Plex, including schedulers/orchestrators for TV / Movie downloads, 
+an always behind VPN torrenting webserver, and a site for users to request new downloads. 
+SSL and a GoogleOAuth whitelist are built in as well.
+
 
 -   [Configuration](#configuration)
     -   [Port Forwarding](#port-forwarding)
@@ -9,7 +18,6 @@ Docker Configuration for Running a Media Center at Home.
     -   [DuckDNS](#duckdns)
     -   [File Configuration](#file-configuration)
         -   [.env](#env)
-        -   [traefik.toml](#traefiktoml)
         -   [acme.json](#acmejson)
     -   [Application Setup + Container Info](#application-setup--container-info)
 
@@ -27,9 +35,6 @@ See your router's manual for Instructions.
 
 ### CloudFlare
 
-This configuration was inspired by, and 
-immensely helped by the article at 
-[https://smarthomebeginner.com](https://www.smarthomebeginner.com/traefik-2-docker-tutorial). 
 Instructions in this article to set up 
 free [CloudFlare](https://dash.cloudflare.com/sign-up) services. 
 The CloudFlare section of the article can be found 
@@ -81,6 +86,20 @@ Important links to the source code, documentation,
 and more are available for review as well. 
 
 #### [LINK TO CONTAINER/APPLICATION DOCUMENTATION](docs/CONTAINERS.md)
+
+* * *
+
+### Special Thank You
+
+This configuration was inspired by, and 
+immensely helped by the article at 
+[https://smarthomebeginner.com](https://www.smarthomebeginner.com/traefik-2-docker-tutorial). 
+
+
+[Here](https://github.com/htpcBeginner/docker-traefik) 
+is their massive home server setup on GitHub, and the accompanying 
+[docker-compose](https://github.com/htpcBeginner/docker-traefik/blob/master/docker-compose-t2.yml) 
+file.
 
 * * *
 

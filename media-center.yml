@@ -51,7 +51,6 @@ services:
             - ${DOCKER_DIRECTORY}/traefik/rules:/rules
             - ${DOCKER_DIRECTORY}/traefik/logs:/logs
             - ${DOCKER_DIRECTORY}/shared:/shared
-            - /var/run/docker.sock:/var/run/docker.sock:ro
             - ${DOCKER_DIRECTORY}/traefik/acme/acme.json:/acme.json
         networks:
             traefik:             null
