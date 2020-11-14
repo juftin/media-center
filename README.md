@@ -1,6 +1,5 @@
-<img align="left" width="250" height="250" src="docs/static/juftin.png" alt="juftin logo">
-
-# media-center
+<img align="center" width="250" height="250" src="docs/static/juftin.png" alt="juftin logo">
+<img align="center" src="docs/static/media-center-logo.png" alt="media-center">
 
 
 Home media server docker-compose project built on Docker.  It's a docker-compose project built
