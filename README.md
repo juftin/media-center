@@ -3,11 +3,7 @@
   <img src="docs/static/media-center-logo.png" width="500" alt="media-center">
 </p>
 
-
-
-
-
-Home media server docker-compose project built on Docker.  It's a docker-compose project built
+Media and home server stack.  It's a docker-compose project built
 around Plex, including schedulers/orchestrators for TV / Movie downloads, 
 an always behind VPN torrenting webserver, and a site for users to request new downloads. 
 SSL and a GoogleOAuth whitelist are built in as well.
