@@ -183,7 +183,7 @@ Please refer to the documentation link for further details.
 [GitHub](https://github.com/linuxserver/docker-heimdall) \|\|
 [Website](https://www.heimdall.site)
 
-<img src="static/heimdall_logo.svg" width="300" alt="Heimdall Logo">
+<img src="static/heimdall_logo.svg" width="220" alt="Heimdall Logo">
 
 Heimdall is a way to organise all those links to your most used web sites and 
 web applications in a simple way. Simplicity is the key to Heimdall. 
