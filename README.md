@@ -1,4 +1,4 @@
-<img align="left" width="80" height="80" src="docs/static/juftin.png" alt="juftin logo">
+<img align="left" width="250" height="250" src="docs/static/juftin.png" alt="juftin logo">
 
 # media-center
 
