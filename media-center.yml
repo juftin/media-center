@@ -511,3 +511,31 @@ services:
             traefik.http.routers.resume-rtr.service:                   resume-svc
             traefik.http.services.resume-svc.loadbalancer.server.port: 7856
             traefik.http.routers.resume-rtr.middlewares:               chain-no-auth@file
+
+    ####################################
+    # HOSTED JUPYTER NOTEBOOK
+    ####################################
+
+    jupyter:
+        container_name: jupyter
+        build:
+            context:    ${DOCKER_DIRECTORY}/jupyter/
+            dockerfile: Dockerfile
+        networks:
+            traefik: null
+        restart:        ${UNIVERSAL_RESTART_POLICY}
+        environment:
+            JUPYTER_ENABLE_LAB: "yes"
+            RESTARTABLE:        "yes"
+            JUPYTER_TOKEN:      ${ADMIN_PASSWORD}
+        volumes:
+            - ${DOCKER_DIRECTORY}/jupyter/notebooks:/home/jovyan/work:rw
+        depends_on:
+            - traefik
+        labels:
+            traefik.enable:                                             true
+            traefik.http.routers.jupyter-rtr.rule:                      Host(`${JUPYTER_SUBDOMAIN}.${DOMAIN_NAME}`)
+            traefik.http.routers.jupyter-rtr.entrypoints:               https
+            traefik.http.routers.jupyter-rtr.service:                   jupyter-svc
+            traefik.http.services.jupyter-svc.loadbalancer.server.port: 8888
+            traefik.http.routers.jupyter-rtr.middlewares:               chain-oauth-google@file
