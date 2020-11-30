@@ -524,12 +524,20 @@ services:
         networks:
             traefik: null
         restart:        ${UNIVERSAL_RESTART_POLICY}
+        user:           root
+        working_dir:    /home/${ADMIN_USER}
         environment:
+            NB_USER:            ${ADMIN_USER}
+            NB_UID:             ${PUID}
+            NB_GID:             ${PGID}
             JUPYTER_ENABLE_LAB: "yes"
             RESTARTABLE:        "yes"
+            CHOWN_HOME:         "yes"
+            GRANT_SUDO:         "yes"
             JUPYTER_TOKEN:      ${ADMIN_PASSWORD}
         volumes:
-            - ${DOCKER_DIRECTORY}/jupyter/notebooks:/home/jovyan/work:rw
+            - ${DOCKER_DIRECTORY}/jupyter/notebooks:/home/${ADMIN_USER}/work:rw
+        command:        start.sh jupyter lab --LabApp.token=''
         depends_on:
             - traefik
         labels:
