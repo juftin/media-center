@@ -115,8 +115,10 @@ services:
             - ${DOCKER_DIRECTORY}/plex/config:/config
             - ${TV_DIR}:/tv
             - ${MOVIE_DIR}:/movies
-            - ${PLEX_TRANSCODE_DIR}:/transcode
             - ${DOCKER_DIRECTORY}/shared:/shared
+            # HARDWARE RENDERING DEVICES
+            - /dev/dri:/dev/dri
+            - /tmp:/transcode
         environment:
             TZ:      ${TZ}
             PUID:    ${PUID}
