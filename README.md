@@ -46,7 +46,7 @@ and more are available for review as well.
 [Website](https://plex.tv) \|\|
 [Documentation](https://support.plex.tv/articles/)
 
-<img src="static/plex_logo.png" width="290" alt="Plex Logo">
+<img src="docs/static/plex_logo.png" width="290" alt="Plex Logo">
 
 Plex organizes video, music and photos from personal media libraries 
 and streams them to smart TVs, streaming boxes and mobile devices. This 
@@ -64,7 +64,7 @@ use the root directories, `/tv/` and `/movies/`
 [GitHub](https://github.com/linuxserver/docker-sonarr) \|\|
 [Documentation](https://github.com/Sonarr/Sonarr/wiki)
 
-<img src="static/sonarr_logo.png" width="250" alt="Sonarr Logo">
+<img src="docs/static/sonarr_logo.png" width="250" alt="Sonarr Logo">
 
 Sonarr (formerly NZBdrone) is a PVR for usenet and bittorrent users. 
 It can monitor multiple RSS feeds for new episodes of your 
@@ -80,11 +80,11 @@ exclude non-admin users from accessing the application using the `ADMIN_USER` an
 
 ##### Download Client Configuration:
 
-<img src="static/sonarr_download_client_config.png" width="600" alt="sonarr_download_client_config">
+<img src="docs/static/sonarr_download_client_config.png" width="600" alt="sonarr_download_client_config">
 
 ##### Indexer Client Configuration:
 
-<img src="static/sonarr_indexer_config.png" width="600" alt="sonarr_indexer_config">
+<img src="docs/static/sonarr_indexer_config.png" width="600" alt="sonarr_indexer_config">
 
 ## jackett
 
@@ -92,7 +92,7 @@ exclude non-admin users from accessing the application using the `ADMIN_USER` an
 [GitHub](https://github.com/linuxserver/docker-jackett) |\|
 [Documentation](https://github.com/Jackett/Jackett/wiki)
 
-<img src="static/jackett_logo.png" width="200" alt="Jackett Logo">
+<img src="docs/static/jackett_logo.png" width="200" alt="Jackett Logo">
 
 Jackett works as a proxy server: it translates queries from apps 
 (Sonarr, SickRage, CouchPotato, Mylar, etc) into tracker-site-specific 
@@ -108,7 +108,7 @@ top right of the page. To track a new indexer, click `+Add Indexer` and search f
 it by name. These entries will be added as TORZNAB feeds on applications like
 Sonarr and Radarr.
 
-<img src="static/jackett_add_indexer.png" width="500" alt="jackett_add_indexer">
+<img src="docs/static/jackett_add_indexer.png" width="500" alt="jackett_add_indexer">
 
 #### Recommended Indexers:
 
@@ -153,7 +153,7 @@ Sonarr and Radarr.
 [GitHub](https://github.com/linuxserver/docker-radarr) \|\|
 [Documentation](https://github.com/Radarr/Radarr/wiki)
 
-<img src="static/radarr_logo.png" width="250" alt="Radarr Logo">
+<img src="docs/static/radarr_logo.png" width="250" alt="Radarr Logo">
 
 Radarr is an independent fork of Sonarr reworked for automatically 
 downloading movies via Usenet and BitTorrent.
@@ -173,7 +173,7 @@ exclude non-admin users from accessing the application using the `ADMIN_USER` an
 [Website](https://ombi.io/) \|\|
 [Documentation](https://github.com/tidusjar/Ombi/wiki)
 
-<img src="static/ombi_logo.png" width="300" alt="ombi_logo">
+<img src="docs/static/ombi_logo.png" width="300" alt="ombi_logo">
 
 Ombi allows you to host your own Plex Request and user management system. 
 If you are sharing your Plex server with other users, allow 
@@ -192,15 +192,15 @@ Please refer to the documentation link for further details.
 
 ##### Media Server (Plex) Config
 
-<img src="static/ombi_plex_config.png" width="600" alt="ombi_plex_config">
+<img src="docs/static/ombi_plex_config.png" width="600" alt="ombi_plex_config">
 
 ##### TV (Sonarr) Config
 
-<img src="static/ombi_sonarr_config.png" width="600" alt="ombi_sonarr_config">
+<img src="docs/static/ombi_sonarr_config.png" width="600" alt="ombi_sonarr_config">
 
 ##### Movies (Radarr) Config
 
-<img src="static/ombi_radarr_config.png" width="600" alt="ombi_radarr_config">
+<img src="docs/static/ombi_radarr_config.png" width="600" alt="ombi_radarr_config">
 
 ## heimdall
 
@@ -208,14 +208,14 @@ Please refer to the documentation link for further details.
 [GitHub](https://github.com/linuxserver/docker-heimdall) \|\|
 [Website](https://www.heimdall.site)
 
-<img src="static/heimdall_logo.svg" width="220" alt="Heimdall Logo">
+<img src="docs/static/heimdall_logo.svg" width="220" alt="Heimdall Logo">
 
 Heimdall is a way to organise all those links to your most used web sites and 
 web applications in a simple way. Simplicity is the key to Heimdall. 
 Why not use it as your browser start page? It even has the ability to 
 include a search bar using either Google, Bing or DuckDuckGo.
 
-<img src="static/heimdall.png" width="600" alt="Heimdall">
+<img src="docs/static/heimdall.png" width="600" alt="Heimdall">
 
 ###### Notes:
 
@@ -229,7 +229,7 @@ include a search bar using either Google, Bing or DuckDuckGo.
 [Website](https://www.portainer.io/) \|\|
 [Documentation](https://portainer.readthedocs.io/en/stable/)
 
-<img src="static/portainer_logo.png" width="250" alt="Portainer Logo">
+<img src="docs/static/portainer_logo.png" width="250" alt="Portainer Logo">
 
 Portainer is a lightweight management UI which allows you to 
 easily manage your different Docker environments (Docker hosts or Swarm clusters).
@@ -252,7 +252,7 @@ By default the username is `admin`. I prefer to create a new admin user using bo
 [GitHub](https://github.com/linuxserver/docker-tautulli) \|\|
 [Website](https://tautulli.com/)
 
-<img src="static/tautulli_logo.png" width="250" alt="tautulli Logo">
+<img src="docs/static/tautulli_logo.png" width="250" alt="tautulli Logo">
 
 Tautulli is a 3rd party application that you can run alongside 
 your Plex Media Server to monitor activity and track various statistics. 
@@ -273,7 +273,7 @@ application.
 [Docker Hub](https://hub.docker.com/r/haugene/transmission-openvpn) \|\|
 [GitHub](https://github.com/haugene/docker-transmission-openvpn)
 
-<img src="static/transmission_logo.png" width="250" alt="traefik Logo">
+<img src="docs/static/transmission_logo.png" width="250" alt="traefik Logo">
 
 This container contains OpenVPN and Transmission with a configuration 
 where Transmission is running only when OpenVPN has an active tunnel. 
@@ -298,7 +298,7 @@ make the setup easier.
 [GitHub](https://github.com/containrrr/watchtower) \|\|
 [Documentation](https://containrrr.dev/watchtower/)
 
-<img src="static/watchtower_logo.png" width="250" alt="traefik Logo">
+<img src="docs/static/watchtower_logo.png" width="250" alt="traefik Logo">
 
 With watchtower you can update the running version of your containerized 
 app simply by pushing a new image to the Docker Hub or your own image registry. 
