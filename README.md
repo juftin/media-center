@@ -8,15 +8,19 @@ around Plex, including schedulers/orchestrators for TV / Movie downloads,
 an always behind VPN torrenting webserver, and a site for users to request new downloads. 
 SSL and a GoogleOAuth whitelist are built in as well.
 
-### Important Notice
+### ❗️ Important Notice ❗
 
 This docker-compose application stack is dependent on a separate container 
 stack consisting of Traefik Reverse Proxy, Dynamic DNS Syncing, and a 
-Docker socket proxy. Separately, this repository has a 
-[standalone](https://github.com/juftin/media-center/tree/standalone) branch that contains
-the Reverse proxy and other applications within it. 
+Docker socket proxy.
 
-#### [Traefik Configuration](https://github.com/juftin/traefik/blob/master/README.md)
+##### [⭐ Traefik Configuration ⭐](https://github.com/juftin/traefik/blob/master/README.md)
+
+Separately, this repository has a 
+[standalone](https://github.com/juftin/media-center/tree/standalone) branch which has a self-contained
+Traefik Reverse Proxy. Personally, I prefer to separate my reverse proxy from other ap️plications to 
+reduce dependencies and to allow new apps and endpoints to be spun up and torn down. This 
+standalone branch is mostly un-maintained so make sure to carefully review any differences from master.
 
 ### Application Setup + Container Info
 
