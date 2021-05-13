@@ -116,9 +116,10 @@ services:
             - ${TV_DIR}:/tv
             - ${MOVIE_DIR}:/movies
             - ${DOCKER_DIRECTORY}/shared:/shared
-            # HARDWARE RENDERING DEVICES
-            - /dev/dri:/dev/dri
             - /tmp:/transcode
+        devices:
+            - /dev/dri:/dev/dri
+            - /dev/dvb:/dev/dvb
         environment:
             TZ:      ${TZ}
             PUID:    ${PUID}
